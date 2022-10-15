@@ -1,0 +1,443 @@
+program
+|---- body
+|     |---- declarations
+|     |     |---- declarations
+|     |     |     |---- declarations
+|     |     |     |     |---- EmptyDeclaration
+|     |     |     |---- type
+|     |     |     |     |---- T_INTEGER
+|     |     |     |---- vars
+|     |     |           |---- vars
+|     |     |           |     |---- vars
+|     |     |           |     |     |---- vars
+|     |     |           |     |     |     |---- vars
+|     |     |           |     |     |     |     |---- undef_variable
+|     |     |           |     |     |     |           |---- listspec
+|     |     |           |     |     |     |           |     |---- Empty
+|     |     |           |     |     |     |           |---- T_ID = n
+|     |     |           |     |     |     |---- T_COMMA
+|     |     |           |     |     |     |---- undef_variable
+|     |     |           |     |     |           |---- listspec
+|     |     |           |     |     |           |     |---- Empty
+|     |     |           |     |     |           |---- T_ID = x
+|     |     |           |     |     |---- T_COMMA
+|     |     |           |     |     |---- undef_variable
+|     |     |           |     |           |---- listspec
+|     |     |           |     |           |     |---- Empty
+|     |     |           |     |           |---- T_ID = y
+|     |     |           |     |           |---- T_LPAREN
+|     |     |           |     |           |---- dims
+|     |     |           |     |           |     |---- dim
+|     |     |           |     |           |           |---- T_ICONST = 3
+|     |     |           |     |           |---- T_RPAREN
+|     |     |           |     |---- T_COMMA
+|     |     |           |     |---- undef_variable
+|     |     |           |           |---- listspec
+|     |     |           |           |     |---- Empty
+|     |     |           |           |---- T_ID = i
+|     |     |           |---- T_COMMA
+|     |     |           |---- undef_variable
+|     |     |                 |---- listspec
+|     |     |                 |     |---- Empty
+|     |     |                 |---- T_ID = number
+|     |     |---- type
+|     |     |     |---- T_REAL
+|     |     |---- vars
+|     |           |---- undef_variable
+|     |                 |---- listspec
+|     |                 |     |---- Empty
+|     |                 |---- T_ID = f
+|     |---- statements
+|           |---- statements
+|           |     |---- statements
+|           |     |     |---- statements
+|           |     |     |     |---- labeled_statement
+|           |     |     |           |---- statement
+|           |     |     |                 |---- simple_statement
+|           |     |     |                       |---- io_statement
+|           |     |     |                             |---- T_WRITE
+|           |     |     |                             |---- write_list
+|           |     |     |                                   |---- write_item
+|           |     |     |                                         |---- expression
+|           |     |     |                                               |---- variable
+|           |     |     |                                                     |---- T_ID = number
+|           |     |     |---- labeled_statement
+|           |     |           |---- statement
+|           |     |                 |---- simple_statement
+|           |     |                       |---- io_statement
+|           |     |                             |---- T_READ
+|           |     |                             |---- read_list
+|           |     |                                   |---- read_list
+|           |     |                                   |     |---- read_list
+|           |     |                                   |     |     |---- read_item
+|           |     |                                   |     |           |---- variable
+|           |     |                                   |     |                 |---- T_ID = n
+|           |     |                                   |     |---- T_COMMA
+|           |     |                                   |     |---- read_item
+|           |     |                                   |           |---- T_LPAREN
+|           |     |                                   |           |---- read_list
+|           |     |                                   |           |     |---- read_item
+|           |     |                                   |           |           |---- variable
+|           |     |                                   |           |                 |---- T_ID = y
+|           |     |                                   |           |                 |---- T_LPAREN
+|           |     |                                   |           |                 |---- expressions
+|           |     |                                   |           |                 |     |---- expression
+|           |     |                                   |           |                 |           |---- variable
+|           |     |                                   |           |                 |                 |---- T_ID = i
+|           |     |                                   |           |                 |---- T_RPAREN
+|           |     |                                   |           |---- T_COMMA
+|           |     |                                   |           |---- T_ID = i
+|           |     |                                   |           |---- T_ASSIGN
+|           |     |                                   |           |---- iter_space
+|           |     |                                   |           |     |---- expression
+|           |     |                                   |           |     |     |---- simple_constant
+|           |     |                                   |           |     |           |---- T_ICONST = 1
+|           |     |                                   |           |     |---- T_COMMA
+|           |     |                                   |           |     |---- expression
+|           |     |                                   |           |     |     |---- variable
+|           |     |                                   |           |     |           |---- T_ID = n
+|           |     |                                   |           |     |---- step
+|           |     |                                   |           |           |---- Empty
+|           |     |                                   |           |---- T_RPAREN
+|           |     |                                   |---- T_COMMA
+|           |     |                                   |---- read_item
+|           |     |                                         |---- variable
+|           |     |                                               |---- T_ID = x
+|           |     |---- labeled_statement
+|           |           |---- statement
+|           |                 |---- simple_statement
+|           |                       |---- io_statement
+|           |                             |---- T_WRITE
+|           |                             |---- write_list
+|           |                                   |---- write_list
+|           |                                   |     |---- write_list
+|           |                                   |     |     |---- write_item
+|           |                                   |     |           |---- expression
+|           |                                   |     |                 |---- simple_constant
+|           |                                   |     |                       |---- T_SCONST = "Squares: "
+|           |                                   |     |---- T_COMMA
+|           |                                   |     |---- write_item
+|           |                                   |           |---- T_LPAREN
+|           |                                   |           |---- write_list
+|           |                                   |           |     |---- write_list
+|           |                                   |           |     |     |---- write_item
+|           |                                   |           |     |           |---- expression
+|           |                                   |           |     |                 |---- expression
+|           |                                   |           |     |                 |     |---- variable
+|           |                                   |           |     |                 |           |---- T_ID = y
+|           |                                   |           |     |                 |           |---- T_LPAREN
+|           |                                   |           |     |                 |           |---- expressions
+|           |                                   |           |     |                 |           |     |---- expression
+|           |                                   |           |     |                 |           |           |---- variable
+|           |                                   |           |     |                 |           |                 |---- T_ID = i
+|           |                                   |           |     |                 |           |---- T_RPAREN
+|           |                                   |           |     |                 |---- T_POWEROP
+|           |                                   |           |     |                 |---- expression
+|           |                                   |           |     |                       |---- simple_constant
+|           |                                   |           |     |                             |---- T_ICONST = 2
+|           |                                   |           |     |---- T_COMMA
+|           |                                   |           |     |---- write_item
+|           |                                   |           |           |---- expression
+|           |                                   |           |                 |---- simple_constant
+|           |                                   |           |                       |---- T_SCONST = ","
+|           |                                   |           |---- T_COMMA
+|           |                                   |           |---- T_ID = i
+|           |                                   |           |---- T_ASSIGN
+|           |                                   |           |---- iter_space
+|           |                                   |           |     |---- expression
+|           |                                   |           |     |     |---- simple_constant
+|           |                                   |           |     |           |---- T_ICONST = 1
+|           |                                   |           |     |---- T_COMMA
+|           |                                   |           |     |---- expression
+|           |                                   |           |     |     |---- simple_constant
+|           |                                   |           |     |           |---- T_ICONST = 99
+|           |                                   |           |     |---- step
+|           |                                   |           |           |---- Empty
+|           |                                   |           |---- T_RPAREN
+|           |                                   |---- T_COMMA
+|           |                                   |---- write_item
+|           |                                         |---- expression
+|           |                                               |---- expression
+|           |                                               |     |---- variable
+|           |                                               |           |---- T_ID = y
+|           |                                               |           |---- T_LPAREN
+|           |                                               |           |---- expressions
+|           |                                               |           |     |---- expression
+|           |                                               |           |           |---- simple_constant
+|           |                                               |           |                 |---- T_ICONST = 100
+|           |                                               |           |---- T_RPAREN
+|           |                                               |---- T_POWEROP
+|           |                                               |---- expression
+|           |                                                     |---- simple_constant
+|           |                                                           |---- T_ICONST = 2
+|           |---- labeled_statement
+|                 |---- statement
+|                       |---- simple_statement
+|                             |---- io_statement
+|                                   |---- T_WRITE
+|                                   |---- write_list
+|                                         |---- write_item
+|                                               |---- expression
+|                                                     |---- variable
+|                                                           |---- T_ID = fibonacci
+|                                                           |---- T_LPAREN
+|                                                           |---- expressions
+|                                                           |     |---- expression
+|                                                           |           |---- variable
+|                                                           |                 |---- T_ID = n
+|                                                           |---- T_RPAREN
+|---- T_END
+|---- subprograms
+      |---- subprograms
+      |     |---- subprograms
+      |     |     |---- subprograms
+      |     |     |     |---- Empty
+      |     |     |---- subprogram
+      |     |           |---- header
+      |     |           |     |---- type
+      |     |           |     |     |---- T_INTEGER
+      |     |           |     |---- listspec
+      |     |           |     |     |---- Empty
+      |     |           |     |---- T_FUNCTION
+      |     |           |     |---- T_ID = z
+      |     |           |     |---- T_LPAREN
+      |     |           |     |---- formal_parameters
+      |     |           |     |     |---- type
+      |     |           |     |     |     |---- T_INTEGER
+      |     |           |     |     |---- vars
+      |     |           |     |           |---- undef_variable
+      |     |           |     |                 |---- listspec
+      |     |           |     |                 |     |---- Empty
+      |     |           |     |                 |---- T_ID = number
+      |     |           |     |---- T_RPAREN
+      |     |           |---- body
+      |     |           |     |---- declarations
+      |     |           |     |     |---- EmptyDeclaration
+      |     |           |     |---- statements
+      |     |           |           |---- labeled_statement
+      |     |           |                 |---- statement
+      |     |           |                       |---- compound_statement
+      |     |           |                             |---- branch_statement
+      |     |           |                                   |---- T_IF
+      |     |           |                                   |---- T_LPAREN
+      |     |           |                                   |---- expression
+      |     |           |                                   |     |---- expression
+      |     |           |                                   |     |     |---- variable
+      |     |           |                                   |     |           |---- T_ID = number
+      |     |           |                                   |     |---- T_RELOP = .eq.
+      |     |           |                                   |     |---- expression
+      |     |           |                                   |           |---- simple_constant
+      |     |           |                                   |                 |---- T_ICONST = 3
+      |     |           |                                   |---- T_RPAREN
+      |     |           |                                   |---- T_THEN
+      |     |           |                                   |---- body
+      |     |           |                                   |     |---- declarations
+      |     |           |                                   |     |     |---- declarations
+      |     |           |                                   |     |     |     |---- EmptyDeclaration
+      |     |           |                                   |     |     |---- type
+      |     |           |                                   |     |     |     |---- T_INTEGER
+      |     |           |                                   |     |     |---- vars
+      |     |           |                                   |     |           |---- undef_variable
+      |     |           |                                   |     |                 |---- listspec
+      |     |           |                                   |     |                 |     |---- Empty
+      |     |           |                                   |     |                 |---- T_ID = number
+      |     |           |                                   |     |---- statements
+      |     |           |                                   |           |---- statements
+      |     |           |                                   |           |     |---- labeled_statement
+      |     |           |                                   |           |           |---- statement
+      |     |           |                                   |           |                 |---- simple_statement
+      |     |           |                                   |           |                       |---- assignment
+      |     |           |                                   |           |                             |---- variable
+      |     |           |                                   |           |                             |     |---- T_ID = number
+      |     |           |                                   |           |                             |---- T_ASSIGN
+      |     |           |                                   |           |                             |---- expression
+      |     |           |                                   |           |                                   |---- simple_constant
+      |     |           |                                   |           |                                         |---- T_ICONST = 5
+      |     |           |                                   |           |---- labeled_statement
+      |     |           |                                   |                 |---- statement
+      |     |           |                                   |                       |---- simple_statement
+      |     |           |                                   |                             |---- assignment
+      |     |           |                                   |                                   |---- variable
+      |     |           |                                   |                                   |     |---- T_ID = z
+      |     |           |                                   |                                   |---- T_ASSIGN
+      |     |           |                                   |                                   |---- expression
+      |     |           |                                   |                                         |---- variable
+      |     |           |                                   |                                               |---- T_ID = number
+      |     |           |                                   |---- tail
+      |     |           |                                         |---- T_ELSE
+      |     |           |                                         |---- body
+      |     |           |                                         |     |---- declarations
+      |     |           |                                         |     |     |---- EmptyDeclaration
+      |     |           |                                         |     |---- statements
+      |     |           |                                         |           |---- labeled_statement
+      |     |           |                                         |                 |---- statement
+      |     |           |                                         |                       |---- simple_statement
+      |     |           |                                         |                             |---- assignment
+      |     |           |                                         |                                   |---- variable
+      |     |           |                                         |                                   |     |---- T_ID = z
+      |     |           |                                         |                                   |---- T_ASSIGN
+      |     |           |                                         |                                   |---- expression
+      |     |           |                                         |                                         |---- variable
+      |     |           |                                         |                                               |---- T_ID = number
+      |     |           |                                         |---- T_ENDIF
+      |     |           |---- T_END
+      |     |---- subprogram
+      |           |---- header
+      |           |     |---- T_SUBROUTINE
+      |           |     |---- T_ID = number
+      |           |---- body
+      |           |     |---- declarations
+      |           |     |     |---- EmptyDeclaration
+      |           |     |---- statements
+      |           |           |---- statements
+      |           |           |     |---- labeled_statement
+      |           |           |           |---- statement
+      |           |           |                 |---- simple_statement
+      |           |           |                       |---- io_statement
+      |           |           |                             |---- T_WRITE
+      |           |           |                             |---- write_list
+      |           |           |                                   |---- write_item
+      |           |           |                                         |---- expression
+      |           |           |                                               |---- simple_constant
+      |           |           |                                                     |---- T_ICONST = 3
+      |           |           |---- labeled_statement
+      |           |                 |---- statement
+      |           |                       |---- simple_statement
+      |           |                             |---- T_RETURN
+      |           |---- T_END
+      |---- subprogram
+            |---- header
+            |     |---- type
+            |     |     |---- T_INTEGER
+            |     |---- listspec
+            |     |     |---- Empty
+            |     |---- T_FUNCTION
+            |     |---- T_ID = fibonacci
+            |     |---- T_LPAREN
+            |     |---- formal_parameters
+            |     |     |---- type
+            |     |     |     |---- T_INTEGER
+            |     |     |---- vars
+            |     |           |---- undef_variable
+            |     |                 |---- listspec
+            |     |                 |     |---- Empty
+            |     |                 |---- T_ID = number
+            |     |---- T_RPAREN
+            |---- body
+            |     |---- declarations
+            |     |     |---- EmptyDeclaration
+            |     |---- statements
+            |           |---- statements
+            |           |     |---- statements
+            |           |     |     |---- labeled_statement
+            |           |     |           |---- statement
+            |           |     |                 |---- compound_statement
+            |           |     |                       |---- branch_statement
+            |           |     |                             |---- T_IF
+            |           |     |                             |---- T_LPAREN
+            |           |     |                             |---- expression
+            |           |     |                             |     |---- expression
+            |           |     |                             |     |     |---- variable
+            |           |     |                             |     |           |---- T_ID = number
+            |           |     |                             |     |---- T_RELOP = .eq.
+            |           |     |                             |     |---- expression
+            |           |     |                             |           |---- simple_constant
+            |           |     |                             |                 |---- T_ICONST = 0
+            |           |     |                             |---- T_RPAREN
+            |           |     |                             |---- T_THEN
+            |           |     |                             |---- body
+            |           |     |                             |     |---- declarations
+            |           |     |                             |     |     |---- EmptyDeclaration
+            |           |     |                             |     |---- statements
+            |           |     |                             |           |---- statements
+            |           |     |                             |           |     |---- labeled_statement
+            |           |     |                             |           |           |---- statement
+            |           |     |                             |           |                 |---- simple_statement
+            |           |     |                             |           |                       |---- assignment
+            |           |     |                             |           |                             |---- variable
+            |           |     |                             |           |                             |     |---- T_ID = fibonacci
+            |           |     |                             |           |                             |---- T_ASSIGN
+            |           |     |                             |           |                             |---- expression
+            |           |     |                             |           |                                   |---- simple_constant
+            |           |     |                             |           |                                         |---- T_ICONST = 0
+            |           |     |                             |           |---- labeled_statement
+            |           |     |                             |                 |---- statement
+            |           |     |                             |                       |---- simple_statement
+            |           |     |                             |                             |---- T_RETURN
+            |           |     |                             |---- tail
+            |           |     |                                   |---- T_ENDIF
+            |           |     |---- labeled_statement
+            |           |           |---- statement
+            |           |                 |---- compound_statement
+            |           |                       |---- branch_statement
+            |           |                             |---- T_IF
+            |           |                             |---- T_LPAREN
+            |           |                             |---- expression
+            |           |                             |     |---- expression
+            |           |                             |     |     |---- variable
+            |           |                             |     |           |---- T_ID = number
+            |           |                             |     |---- T_RELOP = .eq.
+            |           |                             |     |---- expression
+            |           |                             |           |---- simple_constant
+            |           |                             |                 |---- T_ICONST = 1
+            |           |                             |---- T_RPAREN
+            |           |                             |---- T_THEN
+            |           |                             |---- body
+            |           |                             |     |---- declarations
+            |           |                             |     |     |---- EmptyDeclaration
+            |           |                             |     |---- statements
+            |           |                             |           |---- statements
+            |           |                             |           |     |---- labeled_statement
+            |           |                             |           |           |---- statement
+            |           |                             |           |                 |---- simple_statement
+            |           |                             |           |                       |---- assignment
+            |           |                             |           |                             |---- variable
+            |           |                             |           |                             |     |---- T_ID = fibonacci
+            |           |                             |           |                             |---- T_ASSIGN
+            |           |                             |           |                             |---- expression
+            |           |                             |           |                                   |---- simple_constant
+            |           |                             |           |                                         |---- T_ICONST = 1
+            |           |                             |           |---- labeled_statement
+            |           |                             |                 |---- statement
+            |           |                             |                       |---- simple_statement
+            |           |                             |                             |---- T_RETURN
+            |           |                             |---- tail
+            |           |                                   |---- T_ENDIF
+            |           |---- labeled_statement
+            |                 |---- statement
+            |                       |---- simple_statement
+            |                             |---- assignment
+            |                                   |---- variable
+            |                                   |     |---- T_ID = fibonacci
+            |                                   |---- T_ASSIGN
+            |                                   |---- expression
+            |                                         |---- expression
+            |                                         |     |---- variable
+            |                                         |           |---- T_ID = fibonacci
+            |                                         |           |---- T_LPAREN
+            |                                         |           |---- expressions
+            |                                         |           |     |---- expression
+            |                                         |           |           |---- expression
+            |                                         |           |           |     |---- variable
+            |                                         |           |           |           |---- T_ID = number
+            |                                         |           |           |---- T_ADDOP = -
+            |                                         |           |           |---- expression
+            |                                         |           |                 |---- simple_constant
+            |                                         |           |                       |---- T_ICONST = 1
+            |                                         |           |---- T_RPAREN
+            |                                         |---- T_ADDOP = +
+            |                                         |---- expression
+            |                                               |---- variable
+            |                                                     |---- T_ID = fibonacci
+            |                                                     |---- T_LPAREN
+            |                                                     |---- expressions
+            |                                                     |     |---- expression
+            |                                                     |           |---- expression
+            |                                                     |           |     |---- variable
+            |                                                     |           |           |---- T_ID = number
+            |                                                     |           |---- T_ADDOP = -
+            |                                                     |           |---- expression
+            |                                                     |                 |---- simple_constant
+            |                                                     |                       |---- T_ICONST = 2
+            |                                                     |---- T_RPAREN
+            |---- T_END

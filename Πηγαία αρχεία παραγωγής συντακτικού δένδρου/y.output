@@ -1,0 +1,3470 @@
+   0  $accept : program $end
+
+   1  program : body T_END subprograms
+
+   2  body : declarations statements
+
+   3  declarations : declarations type vars
+   4               | declarations T_COMMON cblock_list
+   5               | declarations T_DATA vals
+   6               |
+
+   7  type : T_INTEGER
+   8       | T_REAL
+   9       | T_COMPLEX
+  10       | T_LOGICAL
+  11       | T_CHARACTER
+  12       | T_STRING
+
+  13  vars : vars T_COMMA undef_variable
+  14       | undef_variable
+
+  15  undef_variable : listspec T_ID T_LPAREN dims T_RPAREN
+  16                 | listspec T_ID
+
+  17  listspec : T_LIST
+  18           |
+
+  19  dims : dims T_COMMA dim
+  20       | dim
+
+  21  dim : T_ICONST
+  22      | T_ID
+
+  23  cblock_list : cblock_list cblock
+  24              | cblock
+
+  25  cblock : T_DIVOP T_ID T_DIVOP id_list
+
+  26  id_list : id_list T_COMMA T_ID
+  27          | T_ID
+
+  28  vals : vals T_COMMA T_ID value_list
+  29       | T_ID value_list
+
+  30  value_list : T_DIVOP values T_DIVOP
+
+  31  values : values T_COMMA value
+  32         | value
+
+  33  value : repeat sign constant
+  34        | T_ADDOP constant
+  35        | constant
+
+  36  repeat : T_ICONST T_MULOP
+  37         | T_MULOP
+
+  38  sign : T_ADDOP
+  39       |
+
+  40  constant : simple_constant
+  41           | complex_constant
+
+  42  simple_constant : T_ICONST
+  43                  | T_RCONST
+  44                  | T_LCONST
+  45                  | T_CCONST
+  46                  | T_SCONST
+
+  47  complex_constant : T_LPAREN T_RCONST T_COLON sign T_RCONST T_RPAREN
+
+  48  statements : statements labeled_statement
+  49             | labeled_statement
+
+  50  labeled_statement : label statement
+  51                    | statement
+
+  52  label : T_ICONST
+
+  53  statement : simple_statement
+  54            | compound_statement
+
+  55  simple_statement : assignment
+  56                   | goto_statement
+  57                   | if_statement
+  58                   | subroutine_call
+  59                   | io_statement
+  60                   | T_CONTINUE
+  61                   | T_RETURN
+  62                   | T_STOP
+
+  63  assignment : variable T_ASSIGN expression
+
+  64  variable : T_ID T_LPAREN expressions T_RPAREN
+  65           | T_LISTFUNC T_LPAREN expression T_RPAREN
+  66           | T_ID
+
+  67  expressions : expressions T_COMMA expression
+  68              | expression
+
+  69  expression : expression T_OROP expression
+  70             | expression T_ANDOP expression
+  71             | expression T_RELOP expression
+  72             | expression T_ADDOP expression
+  73             | expression T_MULOP expression
+  74             | expression T_DIVOP expression
+  75             | expression T_POWEROP expression
+  76             | T_NOTOP expression
+  77             | T_ADDOP expression
+  78             | variable
+  79             | simple_constant
+  80             | T_LENGTH T_LPAREN expression T_RPAREN
+  81             | T_NEW T_LPAREN expression T_RPAREN
+  82             | T_LPAREN expression T_RPAREN
+  83             | T_LPAREN expression T_COLON expression T_RPAREN
+  84             | listexpression
+
+  85  listexpression : T_LBRACK expressions T_RBRACK
+  86                 | T_LBRACK T_RBRACK
+
+  87  goto_statement : T_GOTO label
+  88                 | T_GOTO T_ID T_COMMA T_LPAREN labels T_RPAREN
+
+  89  labels : labels T_COMMA label
+  90         | label
+
+  91  if_statement : T_IF T_LPAREN expression T_RPAREN label T_COMMA label T_COMMA label
+  92               | T_IF T_LPAREN expression T_RPAREN simple_statement
+
+  93  subroutine_call : T_CALL variable
+
+  94  io_statement : T_READ read_list
+  95               | T_WRITE write_list
+
+  96  read_list : read_list T_COMMA read_item
+  97            | read_item
+
+  98  read_item : variable
+  99            | T_LPAREN read_list T_COMMA T_ID T_ASSIGN iter_space T_RPAREN
+
+ 100  iter_space : expression T_COMMA expression step
+
+ 101  step : T_COMMA expression
+ 102       |
+
+ 103  write_list : write_list T_COMMA write_item
+ 104             | write_item
+
+ 105  write_item : expression
+ 106             | T_LPAREN write_list T_COMMA T_ID T_ASSIGN iter_space T_RPAREN
+
+ 107  compound_statement : branch_statement
+ 108                     | loop_statement
+
+ 109  branch_statement : T_IF T_LPAREN expression T_RPAREN T_THEN body tail
+
+ 110  tail : T_ELSE body T_ENDIF
+ 111       | T_ENDIF
+
+ 112  loop_statement : T_DO T_ID T_ASSIGN iter_space body T_ENDDO
+
+ 113  subprograms : subprograms subprogram
+ 114              |
+
+ 115  subprogram : header body T_END
+
+ 116  header : type listspec T_FUNCTION T_ID T_LPAREN formal_parameters T_RPAREN
+ 117         | T_SUBROUTINE T_ID T_LPAREN formal_parameters T_RPAREN
+ 118         | T_SUBROUTINE T_ID
+
+ 119  formal_parameters : type vars T_COMMA formal_parameters
+ 120                    | type vars
+
+state 0
+	$accept : . program $end  (0)
+	declarations : .  (6)
+
+	.  reduce 6
+
+	program  goto 1
+	declarations  goto 2
+	body  goto 3
+
+
+state 1
+	$accept : program . $end  (0)
+
+	$end  accept
+
+
+state 2
+	body : declarations . statements  (2)
+	declarations : declarations . type vars  (3)
+	declarations : declarations . T_COMMON cblock_list  (4)
+	declarations : declarations . T_DATA vals  (5)
+
+	T_GOTO  shift 4
+	T_RETURN  shift 5
+	T_COMPLEX  shift 6
+	T_DO  shift 7
+	T_CALL  shift 8
+	T_READ  shift 9
+	T_REAL  shift 10
+	T_LOGICAL  shift 11
+	T_CHARACTER  shift 12
+	T_IF  shift 13
+	T_COMMON  shift 14
+	T_ICONST  shift 15
+	T_CONTINUE  shift 16
+	T_ID  shift 17
+	T_STOP  shift 18
+	T_INTEGER  shift 19
+	T_DATA  shift 20
+	T_WRITE  shift 21
+	T_STRING  shift 22
+	T_LISTFUNC  shift 23
+	.  error
+
+	type  goto 24
+	loop_statement  goto 25
+	statements  goto 26
+	simple_statement  goto 27
+	labeled_statement  goto 28
+	label  goto 29
+	statement  goto 30
+	io_statement  goto 31
+	goto_statement  goto 32
+	variable  goto 33
+	compound_statement  goto 34
+	subroutine_call  goto 35
+	if_statement  goto 36
+	assignment  goto 37
+	branch_statement  goto 38
+
+
+state 3
+	program : body . T_END subprograms  (1)
+
+	T_END  shift 39
+	.  error
+
+
+state 4
+	goto_statement : T_GOTO . label  (87)
+	goto_statement : T_GOTO . T_ID T_COMMA T_LPAREN labels T_RPAREN  (88)
+
+	T_ICONST  shift 15
+	T_ID  shift 40
+	.  error
+
+	label  goto 41
+
+
+state 5
+	simple_statement : T_RETURN .  (61)
+
+	.  reduce 61
+
+
+state 6
+	type : T_COMPLEX .  (9)
+
+	.  reduce 9
+
+
+state 7
+	loop_statement : T_DO . T_ID T_ASSIGN iter_space body T_ENDDO  (112)
+
+	T_ID  shift 42
+	.  error
+
+
+state 8
+	subroutine_call : T_CALL . variable  (93)
+
+	T_ID  shift 17
+	T_LISTFUNC  shift 23
+	.  error
+
+	variable  goto 43
+
+
+state 9
+	io_statement : T_READ . read_list  (94)
+
+	T_LPAREN  shift 44
+	T_ID  shift 17
+	T_LISTFUNC  shift 23
+	.  error
+
+	read_item  goto 45
+	read_list  goto 46
+	variable  goto 47
+
+
+state 10
+	type : T_REAL .  (8)
+
+	.  reduce 8
+
+
+state 11
+	type : T_LOGICAL .  (10)
+
+	.  reduce 10
+
+
+state 12
+	type : T_CHARACTER .  (11)
+
+	.  reduce 11
+
+
+state 13
+	if_statement : T_IF . T_LPAREN expression T_RPAREN label T_COMMA label T_COMMA label  (91)
+	if_statement : T_IF . T_LPAREN expression T_RPAREN simple_statement  (92)
+	branch_statement : T_IF . T_LPAREN expression T_RPAREN T_THEN body tail  (109)
+
+	T_LPAREN  shift 48
+	.  error
+
+
+state 14
+	declarations : declarations T_COMMON . cblock_list  (4)
+
+	T_DIVOP  shift 49
+	.  error
+
+	cblock_list  goto 50
+	cblock  goto 51
+
+
+state 15
+	label : T_ICONST .  (52)
+
+	.  reduce 52
+
+
+state 16
+	simple_statement : T_CONTINUE .  (60)
+
+	.  reduce 60
+
+
+state 17
+	variable : T_ID . T_LPAREN expressions T_RPAREN  (64)
+	variable : T_ID .  (66)
+
+	T_LPAREN  shift 52
+	T_GOTO  reduce 66
+	T_RETURN  reduce 66
+	T_COMPLEX  reduce 66
+	T_DO  reduce 66
+	T_CALL  reduce 66
+	T_RPAREN  reduce 66
+	T_POWEROP  reduce 66
+	T_READ  reduce 66
+	T_COLON  reduce 66
+	T_REAL  reduce 66
+	T_LOGICAL  reduce 66
+	T_CHARACTER  reduce 66
+	T_RBRACK  reduce 66
+	T_ELSE  reduce 66
+	T_IF  reduce 66
+	T_COMMON  reduce 66
+	T_ANDOP  reduce 66
+	T_ENDDO  reduce 66
+	T_ICONST  reduce 66
+	T_CONTINUE  reduce 66
+	T_COMMA  reduce 66
+	T_ID  reduce 66
+	T_RELOP  reduce 66
+	T_STOP  reduce 66
+	T_INTEGER  reduce 66
+	T_DATA  reduce 66
+	T_WRITE  reduce 66
+	T_STRING  reduce 66
+	T_OROP  reduce 66
+	T_ASSIGN  reduce 66
+	T_MULOP  reduce 66
+	T_ADDOP  reduce 66
+	T_END  reduce 66
+	T_ENDIF  reduce 66
+	T_DIVOP  reduce 66
+	T_LISTFUNC  reduce 66
+
+
+state 18
+	simple_statement : T_STOP .  (62)
+
+	.  reduce 62
+
+
+state 19
+	type : T_INTEGER .  (7)
+
+	.  reduce 7
+
+
+state 20
+	declarations : declarations T_DATA . vals  (5)
+
+	T_ID  shift 53
+	.  error
+
+	vals  goto 54
+
+
+state 21
+	io_statement : T_WRITE . write_list  (95)
+
+	T_LPAREN  shift 55
+	T_CCONST  shift 56
+	T_LENGTH  shift 57
+	T_SCONST  shift 58
+	T_LCONST  shift 59
+	T_RCONST  shift 60
+	T_ICONST  shift 61
+	T_ID  shift 17
+	T_ADDOP  shift 62
+	T_NOTOP  shift 63
+	T_NEW  shift 64
+	T_LBRACK  shift 65
+	T_LISTFUNC  shift 23
+	.  error
+
+	write_list  goto 66
+	listexpression  goto 67
+	expression  goto 68
+	write_item  goto 69
+	simple_constant  goto 70
+	variable  goto 71
+
+
+state 22
+	type : T_STRING .  (12)
+
+	.  reduce 12
+
+
+state 23
+	variable : T_LISTFUNC . T_LPAREN expression T_RPAREN  (65)
+
+	T_LPAREN  shift 72
+	.  error
+
+
+state 24
+	declarations : declarations type . vars  (3)
+	listspec : .  (18)
+
+	T_LIST  shift 73
+	T_ID  reduce 18
+
+	listspec  goto 74
+	vars  goto 75
+	undef_variable  goto 76
+
+
+state 25
+	compound_statement : loop_statement .  (108)
+
+	.  reduce 108
+
+
+state 26
+	body : declarations statements .  (2)
+	statements : statements . labeled_statement  (48)
+
+	T_GOTO  shift 4
+	T_RETURN  shift 5
+	T_DO  shift 7
+	T_CALL  shift 8
+	T_READ  shift 9
+	T_IF  shift 13
+	T_ICONST  shift 15
+	T_CONTINUE  shift 16
+	T_ID  shift 17
+	T_STOP  shift 18
+	T_WRITE  shift 21
+	T_LISTFUNC  shift 23
+	T_ELSE  reduce 2
+	T_ENDDO  reduce 2
+	T_END  reduce 2
+	T_ENDIF  reduce 2
+
+	loop_statement  goto 25
+	simple_statement  goto 27
+	labeled_statement  goto 77
+	label  goto 29
+	statement  goto 30
+	io_statement  goto 31
+	goto_statement  goto 32
+	variable  goto 33
+	compound_statement  goto 34
+	subroutine_call  goto 35
+	if_statement  goto 36
+	assignment  goto 37
+	branch_statement  goto 38
+
+
+state 27
+	statement : simple_statement .  (53)
+
+	.  reduce 53
+
+
+state 28
+	statements : labeled_statement .  (49)
+
+	.  reduce 49
+
+
+state 29
+	labeled_statement : label . statement  (50)
+
+	T_GOTO  shift 4
+	T_RETURN  shift 5
+	T_DO  shift 7
+	T_CALL  shift 8
+	T_READ  shift 9
+	T_IF  shift 13
+	T_CONTINUE  shift 16
+	T_ID  shift 17
+	T_STOP  shift 18
+	T_WRITE  shift 21
+	T_LISTFUNC  shift 23
+	.  error
+
+	loop_statement  goto 25
+	simple_statement  goto 27
+	statement  goto 78
+	io_statement  goto 31
+	goto_statement  goto 32
+	variable  goto 33
+	compound_statement  goto 34
+	subroutine_call  goto 35
+	if_statement  goto 36
+	assignment  goto 37
+	branch_statement  goto 38
+
+
+state 30
+	labeled_statement : statement .  (51)
+
+	.  reduce 51
+
+
+state 31
+	simple_statement : io_statement .  (59)
+
+	.  reduce 59
+
+
+state 32
+	simple_statement : goto_statement .  (56)
+
+	.  reduce 56
+
+
+state 33
+	assignment : variable . T_ASSIGN expression  (63)
+
+	T_ASSIGN  shift 79
+	.  error
+
+
+state 34
+	statement : compound_statement .  (54)
+
+	.  reduce 54
+
+
+state 35
+	simple_statement : subroutine_call .  (58)
+
+	.  reduce 58
+
+
+state 36
+	simple_statement : if_statement .  (57)
+
+	.  reduce 57
+
+
+state 37
+	simple_statement : assignment .  (55)
+
+	.  reduce 55
+
+
+state 38
+	compound_statement : branch_statement .  (107)
+
+	.  reduce 107
+
+
+state 39
+	program : body T_END . subprograms  (1)
+	subprograms : .  (114)
+
+	.  reduce 114
+
+	subprograms  goto 80
+
+
+state 40
+	goto_statement : T_GOTO T_ID . T_COMMA T_LPAREN labels T_RPAREN  (88)
+
+	T_COMMA  shift 81
+	.  error
+
+
+state 41
+	goto_statement : T_GOTO label .  (87)
+
+	.  reduce 87
+
+
+state 42
+	loop_statement : T_DO T_ID . T_ASSIGN iter_space body T_ENDDO  (112)
+
+	T_ASSIGN  shift 82
+	.  error
+
+
+state 43
+	subroutine_call : T_CALL variable .  (93)
+
+	.  reduce 93
+
+
+state 44
+	read_item : T_LPAREN . read_list T_COMMA T_ID T_ASSIGN iter_space T_RPAREN  (99)
+
+	T_LPAREN  shift 44
+	T_ID  shift 17
+	T_LISTFUNC  shift 23
+	.  error
+
+	read_item  goto 45
+	read_list  goto 83
+	variable  goto 47
+
+
+state 45
+	read_list : read_item .  (97)
+
+	.  reduce 97
+
+
+state 46
+	io_statement : T_READ read_list .  (94)
+	read_list : read_list . T_COMMA read_item  (96)
+
+	T_COMMA  shift 84
+	T_GOTO  reduce 94
+	T_RETURN  reduce 94
+	T_DO  reduce 94
+	T_CALL  reduce 94
+	T_READ  reduce 94
+	T_ELSE  reduce 94
+	T_IF  reduce 94
+	T_ENDDO  reduce 94
+	T_ICONST  reduce 94
+	T_CONTINUE  reduce 94
+	T_ID  reduce 94
+	T_STOP  reduce 94
+	T_WRITE  reduce 94
+	T_END  reduce 94
+	T_ENDIF  reduce 94
+	T_LISTFUNC  reduce 94
+
+
+state 47
+	read_item : variable .  (98)
+
+	.  reduce 98
+
+
+state 48
+	if_statement : T_IF T_LPAREN . expression T_RPAREN label T_COMMA label T_COMMA label  (91)
+	if_statement : T_IF T_LPAREN . expression T_RPAREN simple_statement  (92)
+	branch_statement : T_IF T_LPAREN . expression T_RPAREN T_THEN body tail  (109)
+
+	T_LPAREN  shift 85
+	T_CCONST  shift 56
+	T_LENGTH  shift 57
+	T_SCONST  shift 58
+	T_LCONST  shift 59
+	T_RCONST  shift 60
+	T_ICONST  shift 61
+	T_ID  shift 17
+	T_ADDOP  shift 62
+	T_NOTOP  shift 63
+	T_NEW  shift 64
+	T_LBRACK  shift 65
+	T_LISTFUNC  shift 23
+	.  error
+
+	listexpression  goto 67
+	expression  goto 86
+	simple_constant  goto 70
+	variable  goto 71
+
+
+state 49
+	cblock : T_DIVOP . T_ID T_DIVOP id_list  (25)
+
+	T_ID  shift 87
+	.  error
+
+
+state 50
+	declarations : declarations T_COMMON cblock_list .  (4)
+	cblock_list : cblock_list . cblock  (23)
+
+	T_DIVOP  shift 49
+	T_GOTO  reduce 4
+	T_RETURN  reduce 4
+	T_COMPLEX  reduce 4
+	T_DO  reduce 4
+	T_CALL  reduce 4
+	T_READ  reduce 4
+	T_REAL  reduce 4
+	T_LOGICAL  reduce 4
+	T_CHARACTER  reduce 4
+	T_IF  reduce 4
+	T_COMMON  reduce 4
+	T_ICONST  reduce 4
+	T_CONTINUE  reduce 4
+	T_ID  reduce 4
+	T_STOP  reduce 4
+	T_INTEGER  reduce 4
+	T_DATA  reduce 4
+	T_WRITE  reduce 4
+	T_STRING  reduce 4
+	T_LISTFUNC  reduce 4
+
+	cblock  goto 88
+
+
+state 51
+	cblock_list : cblock .  (24)
+
+	.  reduce 24
+
+
+state 52
+	variable : T_ID T_LPAREN . expressions T_RPAREN  (64)
+
+	T_LPAREN  shift 85
+	T_CCONST  shift 56
+	T_LENGTH  shift 57
+	T_SCONST  shift 58
+	T_LCONST  shift 59
+	T_RCONST  shift 60
+	T_ICONST  shift 61
+	T_ID  shift 17
+	T_ADDOP  shift 62
+	T_NOTOP  shift 63
+	T_NEW  shift 64
+	T_LBRACK  shift 65
+	T_LISTFUNC  shift 23
+	.  error
+
+	expressions  goto 89
+	listexpression  goto 67
+	expression  goto 90
+	simple_constant  goto 70
+	variable  goto 71
+
+
+state 53
+	vals : T_ID . value_list  (29)
+
+	T_DIVOP  shift 91
+	.  error
+
+	value_list  goto 92
+
+
+state 54
+	declarations : declarations T_DATA vals .  (5)
+	vals : vals . T_COMMA T_ID value_list  (28)
+
+	T_COMMA  shift 93
+	T_GOTO  reduce 5
+	T_RETURN  reduce 5
+	T_COMPLEX  reduce 5
+	T_DO  reduce 5
+	T_CALL  reduce 5
+	T_READ  reduce 5
+	T_REAL  reduce 5
+	T_LOGICAL  reduce 5
+	T_CHARACTER  reduce 5
+	T_IF  reduce 5
+	T_COMMON  reduce 5
+	T_ICONST  reduce 5
+	T_CONTINUE  reduce 5
+	T_ID  reduce 5
+	T_STOP  reduce 5
+	T_INTEGER  reduce 5
+	T_DATA  reduce 5
+	T_WRITE  reduce 5
+	T_STRING  reduce 5
+	T_LISTFUNC  reduce 5
+
+
+state 55
+	expression : T_LPAREN . expression T_RPAREN  (82)
+	expression : T_LPAREN . expression T_COLON expression T_RPAREN  (83)
+	write_item : T_LPAREN . write_list T_COMMA T_ID T_ASSIGN iter_space T_RPAREN  (106)
+
+	T_LPAREN  shift 55
+	T_CCONST  shift 56
+	T_LENGTH  shift 57
+	T_SCONST  shift 58
+	T_LCONST  shift 59
+	T_RCONST  shift 60
+	T_ICONST  shift 61
+	T_ID  shift 17
+	T_ADDOP  shift 62
+	T_NOTOP  shift 63
+	T_NEW  shift 64
+	T_LBRACK  shift 65
+	T_LISTFUNC  shift 23
+	.  error
+
+	write_list  goto 94
+	listexpression  goto 67
+	expression  goto 95
+	write_item  goto 69
+	simple_constant  goto 70
+	variable  goto 71
+
+
+state 56
+	simple_constant : T_CCONST .  (45)
+
+	.  reduce 45
+
+
+state 57
+	expression : T_LENGTH . T_LPAREN expression T_RPAREN  (80)
+
+	T_LPAREN  shift 96
+	.  error
+
+
+state 58
+	simple_constant : T_SCONST .  (46)
+
+	.  reduce 46
+
+
+state 59
+	simple_constant : T_LCONST .  (44)
+
+	.  reduce 44
+
+
+state 60
+	simple_constant : T_RCONST .  (43)
+
+	.  reduce 43
+
+
+state 61
+	simple_constant : T_ICONST .  (42)
+
+	.  reduce 42
+
+
+state 62
+	expression : T_ADDOP . expression  (77)
+
+	T_LPAREN  shift 85
+	T_CCONST  shift 56
+	T_LENGTH  shift 57
+	T_SCONST  shift 58
+	T_LCONST  shift 59
+	T_RCONST  shift 60
+	T_ICONST  shift 61
+	T_ID  shift 17
+	T_ADDOP  shift 62
+	T_NOTOP  shift 63
+	T_NEW  shift 64
+	T_LBRACK  shift 65
+	T_LISTFUNC  shift 23
+	.  error
+
+	listexpression  goto 67
+	expression  goto 97
+	simple_constant  goto 70
+	variable  goto 71
+
+
+state 63
+	expression : T_NOTOP . expression  (76)
+
+	T_LPAREN  shift 85
+	T_CCONST  shift 56
+	T_LENGTH  shift 57
+	T_SCONST  shift 58
+	T_LCONST  shift 59
+	T_RCONST  shift 60
+	T_ICONST  shift 61
+	T_ID  shift 17
+	T_ADDOP  shift 62
+	T_NOTOP  shift 63
+	T_NEW  shift 64
+	T_LBRACK  shift 65
+	T_LISTFUNC  shift 23
+	.  error
+
+	listexpression  goto 67
+	expression  goto 98
+	simple_constant  goto 70
+	variable  goto 71
+
+
+state 64
+	expression : T_NEW . T_LPAREN expression T_RPAREN  (81)
+
+	T_LPAREN  shift 99
+	.  error
+
+
+state 65
+	listexpression : T_LBRACK . expressions T_RBRACK  (85)
+	listexpression : T_LBRACK . T_RBRACK  (86)
+
+	T_LPAREN  shift 85
+	T_CCONST  shift 56
+	T_LENGTH  shift 57
+	T_RBRACK  shift 100
+	T_SCONST  shift 58
+	T_LCONST  shift 59
+	T_RCONST  shift 60
+	T_ICONST  shift 61
+	T_ID  shift 17
+	T_ADDOP  shift 62
+	T_NOTOP  shift 63
+	T_NEW  shift 64
+	T_LBRACK  shift 65
+	T_LISTFUNC  shift 23
+	.  error
+
+	expressions  goto 101
+	listexpression  goto 67
+	expression  goto 90
+	simple_constant  goto 70
+	variable  goto 71
+
+
+state 66
+	io_statement : T_WRITE write_list .  (95)
+	write_list : write_list . T_COMMA write_item  (103)
+
+	T_COMMA  shift 102
+	T_GOTO  reduce 95
+	T_RETURN  reduce 95
+	T_DO  reduce 95
+	T_CALL  reduce 95
+	T_READ  reduce 95
+	T_ELSE  reduce 95
+	T_IF  reduce 95
+	T_ENDDO  reduce 95
+	T_ICONST  reduce 95
+	T_CONTINUE  reduce 95
+	T_ID  reduce 95
+	T_STOP  reduce 95
+	T_WRITE  reduce 95
+	T_END  reduce 95
+	T_ENDIF  reduce 95
+	T_LISTFUNC  reduce 95
+
+
+state 67
+	expression : listexpression .  (84)
+
+	.  reduce 84
+
+
+state 68
+	expression : expression . T_OROP expression  (69)
+	expression : expression . T_ANDOP expression  (70)
+	expression : expression . T_RELOP expression  (71)
+	expression : expression . T_ADDOP expression  (72)
+	expression : expression . T_MULOP expression  (73)
+	expression : expression . T_DIVOP expression  (74)
+	expression : expression . T_POWEROP expression  (75)
+	write_item : expression .  (105)
+
+	T_POWEROP  shift 103
+	T_ANDOP  shift 104
+	T_RELOP  shift 105
+	T_OROP  shift 106
+	T_MULOP  shift 107
+	T_ADDOP  shift 108
+	T_DIVOP  shift 109
+	T_GOTO  reduce 105
+	T_RETURN  reduce 105
+	T_DO  reduce 105
+	T_CALL  reduce 105
+	T_READ  reduce 105
+	T_ELSE  reduce 105
+	T_IF  reduce 105
+	T_ENDDO  reduce 105
+	T_ICONST  reduce 105
+	T_CONTINUE  reduce 105
+	T_COMMA  reduce 105
+	T_ID  reduce 105
+	T_STOP  reduce 105
+	T_WRITE  reduce 105
+	T_END  reduce 105
+	T_ENDIF  reduce 105
+	T_LISTFUNC  reduce 105
+
+
+state 69
+	write_list : write_item .  (104)
+
+	.  reduce 104
+
+
+state 70
+	expression : simple_constant .  (79)
+
+	.  reduce 79
+
+
+state 71
+	expression : variable .  (78)
+
+	.  reduce 78
+
+
+state 72
+	variable : T_LISTFUNC T_LPAREN . expression T_RPAREN  (65)
+
+	T_LPAREN  shift 85
+	T_CCONST  shift 56
+	T_LENGTH  shift 57
+	T_SCONST  shift 58
+	T_LCONST  shift 59
+	T_RCONST  shift 60
+	T_ICONST  shift 61
+	T_ID  shift 17
+	T_ADDOP  shift 62
+	T_NOTOP  shift 63
+	T_NEW  shift 64
+	T_LBRACK  shift 65
+	T_LISTFUNC  shift 23
+	.  error
+
+	listexpression  goto 67
+	expression  goto 110
+	simple_constant  goto 70
+	variable  goto 71
+
+
+state 73
+	listspec : T_LIST .  (17)
+
+	.  reduce 17
+
+
+state 74
+	undef_variable : listspec . T_ID T_LPAREN dims T_RPAREN  (15)
+	undef_variable : listspec . T_ID  (16)
+
+	T_ID  shift 111
+	.  error
+
+
+state 75
+	declarations : declarations type vars .  (3)
+	vars : vars . T_COMMA undef_variable  (13)
+
+	T_COMMA  shift 112
+	T_GOTO  reduce 3
+	T_RETURN  reduce 3
+	T_COMPLEX  reduce 3
+	T_DO  reduce 3
+	T_CALL  reduce 3
+	T_READ  reduce 3
+	T_REAL  reduce 3
+	T_LOGICAL  reduce 3
+	T_CHARACTER  reduce 3
+	T_IF  reduce 3
+	T_COMMON  reduce 3
+	T_ICONST  reduce 3
+	T_CONTINUE  reduce 3
+	T_ID  reduce 3
+	T_STOP  reduce 3
+	T_INTEGER  reduce 3
+	T_DATA  reduce 3
+	T_WRITE  reduce 3
+	T_STRING  reduce 3
+	T_LISTFUNC  reduce 3
+
+
+state 76
+	vars : undef_variable .  (14)
+
+	.  reduce 14
+
+
+state 77
+	statements : statements labeled_statement .  (48)
+
+	.  reduce 48
+
+
+state 78
+	labeled_statement : label statement .  (50)
+
+	.  reduce 50
+
+
+state 79
+	assignment : variable T_ASSIGN . expression  (63)
+
+	T_LPAREN  shift 85
+	T_CCONST  shift 56
+	T_LENGTH  shift 57
+	T_SCONST  shift 58
+	T_LCONST  shift 59
+	T_RCONST  shift 60
+	T_ICONST  shift 61
+	T_ID  shift 17
+	T_ADDOP  shift 62
+	T_NOTOP  shift 63
+	T_NEW  shift 64
+	T_LBRACK  shift 65
+	T_LISTFUNC  shift 23
+	.  error
+
+	listexpression  goto 67
+	expression  goto 113
+	simple_constant  goto 70
+	variable  goto 71
+
+
+state 80
+	program : body T_END subprograms .  (1)
+	subprograms : subprograms . subprogram  (113)
+
+	T_COMPLEX  shift 6
+	T_REAL  shift 10
+	T_LOGICAL  shift 11
+	T_CHARACTER  shift 12
+	T_INTEGER  shift 19
+	T_STRING  shift 22
+	T_SUBROUTINE  shift 114
+	$end  reduce 1
+
+	type  goto 115
+	subprogram  goto 116
+	header  goto 117
+
+
+state 81
+	goto_statement : T_GOTO T_ID T_COMMA . T_LPAREN labels T_RPAREN  (88)
+
+	T_LPAREN  shift 118
+	.  error
+
+
+state 82
+	loop_statement : T_DO T_ID T_ASSIGN . iter_space body T_ENDDO  (112)
+
+	T_LPAREN  shift 85
+	T_CCONST  shift 56
+	T_LENGTH  shift 57
+	T_SCONST  shift 58
+	T_LCONST  shift 59
+	T_RCONST  shift 60
+	T_ICONST  shift 61
+	T_ID  shift 17
+	T_ADDOP  shift 62
+	T_NOTOP  shift 63
+	T_NEW  shift 64
+	T_LBRACK  shift 65
+	T_LISTFUNC  shift 23
+	.  error
+
+	iter_space  goto 119
+	listexpression  goto 67
+	expression  goto 120
+	simple_constant  goto 70
+	variable  goto 71
+
+
+state 83
+	read_list : read_list . T_COMMA read_item  (96)
+	read_item : T_LPAREN read_list . T_COMMA T_ID T_ASSIGN iter_space T_RPAREN  (99)
+
+	T_COMMA  shift 121
+	.  error
+
+
+state 84
+	read_list : read_list T_COMMA . read_item  (96)
+
+	T_LPAREN  shift 44
+	T_ID  shift 17
+	T_LISTFUNC  shift 23
+	.  error
+
+	read_item  goto 122
+	variable  goto 47
+
+
+state 85
+	expression : T_LPAREN . expression T_RPAREN  (82)
+	expression : T_LPAREN . expression T_COLON expression T_RPAREN  (83)
+
+	T_LPAREN  shift 85
+	T_CCONST  shift 56
+	T_LENGTH  shift 57
+	T_SCONST  shift 58
+	T_LCONST  shift 59
+	T_RCONST  shift 60
+	T_ICONST  shift 61
+	T_ID  shift 17
+	T_ADDOP  shift 62
+	T_NOTOP  shift 63
+	T_NEW  shift 64
+	T_LBRACK  shift 65
+	T_LISTFUNC  shift 23
+	.  error
+
+	listexpression  goto 67
+	expression  goto 123
+	simple_constant  goto 70
+	variable  goto 71
+
+
+state 86
+	expression : expression . T_OROP expression  (69)
+	expression : expression . T_ANDOP expression  (70)
+	expression : expression . T_RELOP expression  (71)
+	expression : expression . T_ADDOP expression  (72)
+	expression : expression . T_MULOP expression  (73)
+	expression : expression . T_DIVOP expression  (74)
+	expression : expression . T_POWEROP expression  (75)
+	if_statement : T_IF T_LPAREN expression . T_RPAREN label T_COMMA label T_COMMA label  (91)
+	if_statement : T_IF T_LPAREN expression . T_RPAREN simple_statement  (92)
+	branch_statement : T_IF T_LPAREN expression . T_RPAREN T_THEN body tail  (109)
+
+	T_RPAREN  shift 124
+	T_POWEROP  shift 103
+	T_ANDOP  shift 104
+	T_RELOP  shift 105
+	T_OROP  shift 106
+	T_MULOP  shift 107
+	T_ADDOP  shift 108
+	T_DIVOP  shift 109
+	.  error
+
+
+state 87
+	cblock : T_DIVOP T_ID . T_DIVOP id_list  (25)
+
+	T_DIVOP  shift 125
+	.  error
+
+
+state 88
+	cblock_list : cblock_list cblock .  (23)
+
+	.  reduce 23
+
+
+state 89
+	variable : T_ID T_LPAREN expressions . T_RPAREN  (64)
+	expressions : expressions . T_COMMA expression  (67)
+
+	T_RPAREN  shift 126
+	T_COMMA  shift 127
+	.  error
+
+
+state 90
+	expressions : expression .  (68)
+	expression : expression . T_OROP expression  (69)
+	expression : expression . T_ANDOP expression  (70)
+	expression : expression . T_RELOP expression  (71)
+	expression : expression . T_ADDOP expression  (72)
+	expression : expression . T_MULOP expression  (73)
+	expression : expression . T_DIVOP expression  (74)
+	expression : expression . T_POWEROP expression  (75)
+
+	T_POWEROP  shift 103
+	T_ANDOP  shift 104
+	T_RELOP  shift 105
+	T_OROP  shift 106
+	T_MULOP  shift 107
+	T_ADDOP  shift 108
+	T_DIVOP  shift 109
+	T_RPAREN  reduce 68
+	T_RBRACK  reduce 68
+	T_COMMA  reduce 68
+
+
+state 91
+	value_list : T_DIVOP . values T_DIVOP  (30)
+
+	T_LPAREN  shift 128
+	T_CCONST  shift 56
+	T_SCONST  shift 58
+	T_LCONST  shift 59
+	T_RCONST  shift 60
+	T_ICONST  shift 129
+	T_MULOP  shift 130
+	T_ADDOP  shift 131
+	.  error
+
+	complex_constant  goto 132
+	values  goto 133
+	simple_constant  goto 134
+	value  goto 135
+	constant  goto 136
+	repeat  goto 137
+
+
+state 92
+	vals : T_ID value_list .  (29)
+
+	.  reduce 29
+
+
+state 93
+	vals : vals T_COMMA . T_ID value_list  (28)
+
+	T_ID  shift 138
+	.  error
+
+
+state 94
+	write_list : write_list . T_COMMA write_item  (103)
+	write_item : T_LPAREN write_list . T_COMMA T_ID T_ASSIGN iter_space T_RPAREN  (106)
+
+	T_COMMA  shift 139
+	.  error
+
+
+state 95
+	expression : expression . T_OROP expression  (69)
+	expression : expression . T_ANDOP expression  (70)
+	expression : expression . T_RELOP expression  (71)
+	expression : expression . T_ADDOP expression  (72)
+	expression : expression . T_MULOP expression  (73)
+	expression : expression . T_DIVOP expression  (74)
+	expression : expression . T_POWEROP expression  (75)
+	expression : T_LPAREN expression . T_RPAREN  (82)
+	expression : T_LPAREN expression . T_COLON expression T_RPAREN  (83)
+	write_item : expression .  (105)
+
+	T_RPAREN  shift 140
+	T_POWEROP  shift 103
+	T_COLON  shift 141
+	T_ANDOP  shift 104
+	T_RELOP  shift 105
+	T_OROP  shift 106
+	T_MULOP  shift 107
+	T_ADDOP  shift 108
+	T_DIVOP  shift 109
+	T_COMMA  reduce 105
+
+
+state 96
+	expression : T_LENGTH T_LPAREN . expression T_RPAREN  (80)
+
+	T_LPAREN  shift 85
+	T_CCONST  shift 56
+	T_LENGTH  shift 57
+	T_SCONST  shift 58
+	T_LCONST  shift 59
+	T_RCONST  shift 60
+	T_ICONST  shift 61
+	T_ID  shift 17
+	T_ADDOP  shift 62
+	T_NOTOP  shift 63
+	T_NEW  shift 64
+	T_LBRACK  shift 65
+	T_LISTFUNC  shift 23
+	.  error
+
+	listexpression  goto 67
+	expression  goto 142
+	simple_constant  goto 70
+	variable  goto 71
+
+
+state 97
+	expression : expression . T_OROP expression  (69)
+	expression : expression . T_ANDOP expression  (70)
+	expression : expression . T_RELOP expression  (71)
+	expression : expression . T_ADDOP expression  (72)
+	expression : expression . T_MULOP expression  (73)
+	expression : expression . T_DIVOP expression  (74)
+	expression : expression . T_POWEROP expression  (75)
+	expression : T_ADDOP expression .  (77)
+
+	T_POWEROP  shift 103
+	T_MULOP  shift 107
+	T_DIVOP  shift 109
+	T_GOTO  reduce 77
+	T_RETURN  reduce 77
+	T_COMPLEX  reduce 77
+	T_DO  reduce 77
+	T_CALL  reduce 77
+	T_RPAREN  reduce 77
+	T_READ  reduce 77
+	T_COLON  reduce 77
+	T_REAL  reduce 77
+	T_LOGICAL  reduce 77
+	T_CHARACTER  reduce 77
+	T_RBRACK  reduce 77
+	T_ELSE  reduce 77
+	T_IF  reduce 77
+	T_COMMON  reduce 77
+	T_ANDOP  reduce 77
+	T_ENDDO  reduce 77
+	T_ICONST  reduce 77
+	T_CONTINUE  reduce 77
+	T_COMMA  reduce 77
+	T_ID  reduce 77
+	T_RELOP  reduce 77
+	T_STOP  reduce 77
+	T_INTEGER  reduce 77
+	T_DATA  reduce 77
+	T_WRITE  reduce 77
+	T_STRING  reduce 77
+	T_OROP  reduce 77
+	T_ADDOP  reduce 77
+	T_END  reduce 77
+	T_ENDIF  reduce 77
+	T_LISTFUNC  reduce 77
+
+
+state 98
+	expression : expression . T_OROP expression  (69)
+	expression : expression . T_ANDOP expression  (70)
+	expression : expression . T_RELOP expression  (71)
+	expression : expression . T_ADDOP expression  (72)
+	expression : expression . T_MULOP expression  (73)
+	expression : expression . T_DIVOP expression  (74)
+	expression : expression . T_POWEROP expression  (75)
+	expression : T_NOTOP expression .  (76)
+
+	T_POWEROP  shift 103
+	T_RELOP  shift 105
+	T_MULOP  shift 107
+	T_ADDOP  shift 108
+	T_DIVOP  shift 109
+	T_GOTO  reduce 76
+	T_RETURN  reduce 76
+	T_COMPLEX  reduce 76
+	T_DO  reduce 76
+	T_CALL  reduce 76
+	T_RPAREN  reduce 76
+	T_READ  reduce 76
+	T_COLON  reduce 76
+	T_REAL  reduce 76
+	T_LOGICAL  reduce 76
+	T_CHARACTER  reduce 76
+	T_RBRACK  reduce 76
+	T_ELSE  reduce 76
+	T_IF  reduce 76
+	T_COMMON  reduce 76
+	T_ANDOP  reduce 76
+	T_ENDDO  reduce 76
+	T_ICONST  reduce 76
+	T_CONTINUE  reduce 76
+	T_COMMA  reduce 76
+	T_ID  reduce 76
+	T_STOP  reduce 76
+	T_INTEGER  reduce 76
+	T_DATA  reduce 76
+	T_WRITE  reduce 76
+	T_STRING  reduce 76
+	T_OROP  reduce 76
+	T_END  reduce 76
+	T_ENDIF  reduce 76
+	T_LISTFUNC  reduce 76
+
+
+state 99
+	expression : T_NEW T_LPAREN . expression T_RPAREN  (81)
+
+	T_LPAREN  shift 85
+	T_CCONST  shift 56
+	T_LENGTH  shift 57
+	T_SCONST  shift 58
+	T_LCONST  shift 59
+	T_RCONST  shift 60
+	T_ICONST  shift 61
+	T_ID  shift 17
+	T_ADDOP  shift 62
+	T_NOTOP  shift 63
+	T_NEW  shift 64
+	T_LBRACK  shift 65
+	T_LISTFUNC  shift 23
+	.  error
+
+	listexpression  goto 67
+	expression  goto 143
+	simple_constant  goto 70
+	variable  goto 71
+
+
+state 100
+	listexpression : T_LBRACK T_RBRACK .  (86)
+
+	.  reduce 86
+
+
+state 101
+	expressions : expressions . T_COMMA expression  (67)
+	listexpression : T_LBRACK expressions . T_RBRACK  (85)
+
+	T_RBRACK  shift 144
+	T_COMMA  shift 127
+	.  error
+
+
+state 102
+	write_list : write_list T_COMMA . write_item  (103)
+
+	T_LPAREN  shift 55
+	T_CCONST  shift 56
+	T_LENGTH  shift 57
+	T_SCONST  shift 58
+	T_LCONST  shift 59
+	T_RCONST  shift 60
+	T_ICONST  shift 61
+	T_ID  shift 17
+	T_ADDOP  shift 62
+	T_NOTOP  shift 63
+	T_NEW  shift 64
+	T_LBRACK  shift 65
+	T_LISTFUNC  shift 23
+	.  error
+
+	listexpression  goto 67
+	expression  goto 68
+	write_item  goto 145
+	simple_constant  goto 70
+	variable  goto 71
+
+
+state 103
+	expression : expression T_POWEROP . expression  (75)
+
+	T_LPAREN  shift 85
+	T_CCONST  shift 56
+	T_LENGTH  shift 57
+	T_SCONST  shift 58
+	T_LCONST  shift 59
+	T_RCONST  shift 60
+	T_ICONST  shift 61
+	T_ID  shift 17
+	T_ADDOP  shift 62
+	T_NOTOP  shift 63
+	T_NEW  shift 64
+	T_LBRACK  shift 65
+	T_LISTFUNC  shift 23
+	.  error
+
+	listexpression  goto 67
+	expression  goto 146
+	simple_constant  goto 70
+	variable  goto 71
+
+
+state 104
+	expression : expression T_ANDOP . expression  (70)
+
+	T_LPAREN  shift 85
+	T_CCONST  shift 56
+	T_LENGTH  shift 57
+	T_SCONST  shift 58
+	T_LCONST  shift 59
+	T_RCONST  shift 60
+	T_ICONST  shift 61
+	T_ID  shift 17
+	T_ADDOP  shift 62
+	T_NOTOP  shift 63
+	T_NEW  shift 64
+	T_LBRACK  shift 65
+	T_LISTFUNC  shift 23
+	.  error
+
+	listexpression  goto 67
+	expression  goto 147
+	simple_constant  goto 70
+	variable  goto 71
+
+
+state 105
+	expression : expression T_RELOP . expression  (71)
+
+	T_LPAREN  shift 85
+	T_CCONST  shift 56
+	T_LENGTH  shift 57
+	T_SCONST  shift 58
+	T_LCONST  shift 59
+	T_RCONST  shift 60
+	T_ICONST  shift 61
+	T_ID  shift 17
+	T_ADDOP  shift 62
+	T_NOTOP  shift 63
+	T_NEW  shift 64
+	T_LBRACK  shift 65
+	T_LISTFUNC  shift 23
+	.  error
+
+	listexpression  goto 67
+	expression  goto 148
+	simple_constant  goto 70
+	variable  goto 71
+
+
+state 106
+	expression : expression T_OROP . expression  (69)
+
+	T_LPAREN  shift 85
+	T_CCONST  shift 56
+	T_LENGTH  shift 57
+	T_SCONST  shift 58
+	T_LCONST  shift 59
+	T_RCONST  shift 60
+	T_ICONST  shift 61
+	T_ID  shift 17
+	T_ADDOP  shift 62
+	T_NOTOP  shift 63
+	T_NEW  shift 64
+	T_LBRACK  shift 65
+	T_LISTFUNC  shift 23
+	.  error
+
+	listexpression  goto 67
+	expression  goto 149
+	simple_constant  goto 70
+	variable  goto 71
+
+
+state 107
+	expression : expression T_MULOP . expression  (73)
+
+	T_LPAREN  shift 85
+	T_CCONST  shift 56
+	T_LENGTH  shift 57
+	T_SCONST  shift 58
+	T_LCONST  shift 59
+	T_RCONST  shift 60
+	T_ICONST  shift 61
+	T_ID  shift 17
+	T_ADDOP  shift 62
+	T_NOTOP  shift 63
+	T_NEW  shift 64
+	T_LBRACK  shift 65
+	T_LISTFUNC  shift 23
+	.  error
+
+	listexpression  goto 67
+	expression  goto 150
+	simple_constant  goto 70
+	variable  goto 71
+
+
+state 108
+	expression : expression T_ADDOP . expression  (72)
+
+	T_LPAREN  shift 85
+	T_CCONST  shift 56
+	T_LENGTH  shift 57
+	T_SCONST  shift 58
+	T_LCONST  shift 59
+	T_RCONST  shift 60
+	T_ICONST  shift 61
+	T_ID  shift 17
+	T_ADDOP  shift 62
+	T_NOTOP  shift 63
+	T_NEW  shift 64
+	T_LBRACK  shift 65
+	T_LISTFUNC  shift 23
+	.  error
+
+	listexpression  goto 67
+	expression  goto 151
+	simple_constant  goto 70
+	variable  goto 71
+
+
+state 109
+	expression : expression T_DIVOP . expression  (74)
+
+	T_LPAREN  shift 85
+	T_CCONST  shift 56
+	T_LENGTH  shift 57
+	T_SCONST  shift 58
+	T_LCONST  shift 59
+	T_RCONST  shift 60
+	T_ICONST  shift 61
+	T_ID  shift 17
+	T_ADDOP  shift 62
+	T_NOTOP  shift 63
+	T_NEW  shift 64
+	T_LBRACK  shift 65
+	T_LISTFUNC  shift 23
+	.  error
+
+	listexpression  goto 67
+	expression  goto 152
+	simple_constant  goto 70
+	variable  goto 71
+
+
+state 110
+	variable : T_LISTFUNC T_LPAREN expression . T_RPAREN  (65)
+	expression : expression . T_OROP expression  (69)
+	expression : expression . T_ANDOP expression  (70)
+	expression : expression . T_RELOP expression  (71)
+	expression : expression . T_ADDOP expression  (72)
+	expression : expression . T_MULOP expression  (73)
+	expression : expression . T_DIVOP expression  (74)
+	expression : expression . T_POWEROP expression  (75)
+
+	T_RPAREN  shift 153
+	T_POWEROP  shift 103
+	T_ANDOP  shift 104
+	T_RELOP  shift 105
+	T_OROP  shift 106
+	T_MULOP  shift 107
+	T_ADDOP  shift 108
+	T_DIVOP  shift 109
+	.  error
+
+
+state 111
+	undef_variable : listspec T_ID . T_LPAREN dims T_RPAREN  (15)
+	undef_variable : listspec T_ID .  (16)
+
+	T_LPAREN  shift 154
+	T_GOTO  reduce 16
+	T_RETURN  reduce 16
+	T_COMPLEX  reduce 16
+	T_DO  reduce 16
+	T_CALL  reduce 16
+	T_RPAREN  reduce 16
+	T_READ  reduce 16
+	T_REAL  reduce 16
+	T_LOGICAL  reduce 16
+	T_CHARACTER  reduce 16
+	T_IF  reduce 16
+	T_COMMON  reduce 16
+	T_ICONST  reduce 16
+	T_CONTINUE  reduce 16
+	T_COMMA  reduce 16
+	T_ID  reduce 16
+	T_STOP  reduce 16
+	T_INTEGER  reduce 16
+	T_DATA  reduce 16
+	T_WRITE  reduce 16
+	T_STRING  reduce 16
+	T_LISTFUNC  reduce 16
+
+
+state 112
+	vars : vars T_COMMA . undef_variable  (13)
+	listspec : .  (18)
+
+	T_LIST  shift 73
+	T_ID  reduce 18
+
+	listspec  goto 74
+	undef_variable  goto 155
+
+
+state 113
+	assignment : variable T_ASSIGN expression .  (63)
+	expression : expression . T_OROP expression  (69)
+	expression : expression . T_ANDOP expression  (70)
+	expression : expression . T_RELOP expression  (71)
+	expression : expression . T_ADDOP expression  (72)
+	expression : expression . T_MULOP expression  (73)
+	expression : expression . T_DIVOP expression  (74)
+	expression : expression . T_POWEROP expression  (75)
+
+	T_POWEROP  shift 103
+	T_ANDOP  shift 104
+	T_RELOP  shift 105
+	T_OROP  shift 106
+	T_MULOP  shift 107
+	T_ADDOP  shift 108
+	T_DIVOP  shift 109
+	T_GOTO  reduce 63
+	T_RETURN  reduce 63
+	T_DO  reduce 63
+	T_CALL  reduce 63
+	T_READ  reduce 63
+	T_ELSE  reduce 63
+	T_IF  reduce 63
+	T_ENDDO  reduce 63
+	T_ICONST  reduce 63
+	T_CONTINUE  reduce 63
+	T_ID  reduce 63
+	T_STOP  reduce 63
+	T_WRITE  reduce 63
+	T_END  reduce 63
+	T_ENDIF  reduce 63
+	T_LISTFUNC  reduce 63
+
+
+state 114
+	header : T_SUBROUTINE . T_ID T_LPAREN formal_parameters T_RPAREN  (117)
+	header : T_SUBROUTINE . T_ID  (118)
+
+	T_ID  shift 156
+	.  error
+
+
+state 115
+	header : type . listspec T_FUNCTION T_ID T_LPAREN formal_parameters T_RPAREN  (116)
+	listspec : .  (18)
+
+	T_LIST  shift 73
+	T_FUNCTION  reduce 18
+
+	listspec  goto 157
+
+
+state 116
+	subprograms : subprograms subprogram .  (113)
+
+	.  reduce 113
+
+
+state 117
+	subprogram : header . body T_END  (115)
+	declarations : .  (6)
+
+	.  reduce 6
+
+	declarations  goto 2
+	body  goto 158
+
+
+state 118
+	goto_statement : T_GOTO T_ID T_COMMA T_LPAREN . labels T_RPAREN  (88)
+
+	T_ICONST  shift 15
+	.  error
+
+	label  goto 159
+	labels  goto 160
+
+
+state 119
+	loop_statement : T_DO T_ID T_ASSIGN iter_space . body T_ENDDO  (112)
+	declarations : .  (6)
+
+	.  reduce 6
+
+	declarations  goto 2
+	body  goto 161
+
+
+state 120
+	expression : expression . T_OROP expression  (69)
+	expression : expression . T_ANDOP expression  (70)
+	expression : expression . T_RELOP expression  (71)
+	expression : expression . T_ADDOP expression  (72)
+	expression : expression . T_MULOP expression  (73)
+	expression : expression . T_DIVOP expression  (74)
+	expression : expression . T_POWEROP expression  (75)
+	iter_space : expression . T_COMMA expression step  (100)
+
+	T_POWEROP  shift 103
+	T_ANDOP  shift 104
+	T_COMMA  shift 162
+	T_RELOP  shift 105
+	T_OROP  shift 106
+	T_MULOP  shift 107
+	T_ADDOP  shift 108
+	T_DIVOP  shift 109
+	.  error
+
+
+state 121
+	read_list : read_list T_COMMA . read_item  (96)
+	read_item : T_LPAREN read_list T_COMMA . T_ID T_ASSIGN iter_space T_RPAREN  (99)
+
+	T_LPAREN  shift 44
+	T_ID  shift 163
+	T_LISTFUNC  shift 23
+	.  error
+
+	read_item  goto 122
+	variable  goto 47
+
+
+state 122
+	read_list : read_list T_COMMA read_item .  (96)
+
+	.  reduce 96
+
+
+state 123
+	expression : expression . T_OROP expression  (69)
+	expression : expression . T_ANDOP expression  (70)
+	expression : expression . T_RELOP expression  (71)
+	expression : expression . T_ADDOP expression  (72)
+	expression : expression . T_MULOP expression  (73)
+	expression : expression . T_DIVOP expression  (74)
+	expression : expression . T_POWEROP expression  (75)
+	expression : T_LPAREN expression . T_RPAREN  (82)
+	expression : T_LPAREN expression . T_COLON expression T_RPAREN  (83)
+
+	T_RPAREN  shift 140
+	T_POWEROP  shift 103
+	T_COLON  shift 141
+	T_ANDOP  shift 104
+	T_RELOP  shift 105
+	T_OROP  shift 106
+	T_MULOP  shift 107
+	T_ADDOP  shift 108
+	T_DIVOP  shift 109
+	.  error
+
+
+state 124
+	if_statement : T_IF T_LPAREN expression T_RPAREN . label T_COMMA label T_COMMA label  (91)
+	if_statement : T_IF T_LPAREN expression T_RPAREN . simple_statement  (92)
+	branch_statement : T_IF T_LPAREN expression T_RPAREN . T_THEN body tail  (109)
+
+	T_GOTO  shift 4
+	T_RETURN  shift 5
+	T_THEN  shift 164
+	T_CALL  shift 8
+	T_READ  shift 9
+	T_IF  shift 165
+	T_ICONST  shift 15
+	T_CONTINUE  shift 16
+	T_ID  shift 17
+	T_STOP  shift 18
+	T_WRITE  shift 21
+	T_LISTFUNC  shift 23
+	.  error
+
+	simple_statement  goto 166
+	label  goto 167
+	io_statement  goto 31
+	goto_statement  goto 32
+	variable  goto 33
+	subroutine_call  goto 35
+	if_statement  goto 36
+	assignment  goto 37
+
+
+state 125
+	cblock : T_DIVOP T_ID T_DIVOP . id_list  (25)
+
+	T_ID  shift 168
+	.  error
+
+	id_list  goto 169
+
+
+state 126
+	variable : T_ID T_LPAREN expressions T_RPAREN .  (64)
+
+	.  reduce 64
+
+
+state 127
+	expressions : expressions T_COMMA . expression  (67)
+
+	T_LPAREN  shift 85
+	T_CCONST  shift 56
+	T_LENGTH  shift 57
+	T_SCONST  shift 58
+	T_LCONST  shift 59
+	T_RCONST  shift 60
+	T_ICONST  shift 61
+	T_ID  shift 17
+	T_ADDOP  shift 62
+	T_NOTOP  shift 63
+	T_NEW  shift 64
+	T_LBRACK  shift 65
+	T_LISTFUNC  shift 23
+	.  error
+
+	listexpression  goto 67
+	expression  goto 170
+	simple_constant  goto 70
+	variable  goto 71
+
+
+state 128
+	complex_constant : T_LPAREN . T_RCONST T_COLON sign T_RCONST T_RPAREN  (47)
+
+	T_RCONST  shift 171
+	.  error
+
+
+state 129
+	repeat : T_ICONST . T_MULOP  (36)
+	simple_constant : T_ICONST .  (42)
+
+	T_MULOP  shift 172
+	T_COMMA  reduce 42
+	T_DIVOP  reduce 42
+
+
+state 130
+	repeat : T_MULOP .  (37)
+
+	.  reduce 37
+
+
+state 131
+	value : T_ADDOP . constant  (34)
+
+	T_LPAREN  shift 128
+	T_CCONST  shift 56
+	T_SCONST  shift 58
+	T_LCONST  shift 59
+	T_RCONST  shift 60
+	T_ICONST  shift 61
+	.  error
+
+	complex_constant  goto 132
+	simple_constant  goto 134
+	constant  goto 173
+
+
+state 132
+	constant : complex_constant .  (41)
+
+	.  reduce 41
+
+
+state 133
+	value_list : T_DIVOP values . T_DIVOP  (30)
+	values : values . T_COMMA value  (31)
+
+	T_COMMA  shift 174
+	T_DIVOP  shift 175
+	.  error
+
+
+state 134
+	constant : simple_constant .  (40)
+
+	.  reduce 40
+
+
+state 135
+	values : value .  (32)
+
+	.  reduce 32
+
+
+state 136
+	value : constant .  (35)
+
+	.  reduce 35
+
+
+state 137
+	value : repeat . sign constant  (33)
+	sign : .  (39)
+
+	T_ADDOP  shift 176
+	T_LPAREN  reduce 39
+	T_CCONST  reduce 39
+	T_SCONST  reduce 39
+	T_LCONST  reduce 39
+	T_RCONST  reduce 39
+	T_ICONST  reduce 39
+
+	sign  goto 177
+
+
+state 138
+	vals : vals T_COMMA T_ID . value_list  (28)
+
+	T_DIVOP  shift 91
+	.  error
+
+	value_list  goto 178
+
+
+state 139
+	write_list : write_list T_COMMA . write_item  (103)
+	write_item : T_LPAREN write_list T_COMMA . T_ID T_ASSIGN iter_space T_RPAREN  (106)
+
+	T_LPAREN  shift 55
+	T_CCONST  shift 56
+	T_LENGTH  shift 57
+	T_SCONST  shift 58
+	T_LCONST  shift 59
+	T_RCONST  shift 60
+	T_ICONST  shift 61
+	T_ID  shift 179
+	T_ADDOP  shift 62
+	T_NOTOP  shift 63
+	T_NEW  shift 64
+	T_LBRACK  shift 65
+	T_LISTFUNC  shift 23
+	.  error
+
+	listexpression  goto 67
+	expression  goto 68
+	write_item  goto 145
+	simple_constant  goto 70
+	variable  goto 71
+
+
+state 140
+	expression : T_LPAREN expression T_RPAREN .  (82)
+
+	.  reduce 82
+
+
+state 141
+	expression : T_LPAREN expression T_COLON . expression T_RPAREN  (83)
+
+	T_LPAREN  shift 85
+	T_CCONST  shift 56
+	T_LENGTH  shift 57
+	T_SCONST  shift 58
+	T_LCONST  shift 59
+	T_RCONST  shift 60
+	T_ICONST  shift 61
+	T_ID  shift 17
+	T_ADDOP  shift 62
+	T_NOTOP  shift 63
+	T_NEW  shift 64
+	T_LBRACK  shift 65
+	T_LISTFUNC  shift 23
+	.  error
+
+	listexpression  goto 67
+	expression  goto 180
+	simple_constant  goto 70
+	variable  goto 71
+
+
+state 142
+	expression : expression . T_OROP expression  (69)
+	expression : expression . T_ANDOP expression  (70)
+	expression : expression . T_RELOP expression  (71)
+	expression : expression . T_ADDOP expression  (72)
+	expression : expression . T_MULOP expression  (73)
+	expression : expression . T_DIVOP expression  (74)
+	expression : expression . T_POWEROP expression  (75)
+	expression : T_LENGTH T_LPAREN expression . T_RPAREN  (80)
+
+	T_RPAREN  shift 181
+	T_POWEROP  shift 103
+	T_ANDOP  shift 104
+	T_RELOP  shift 105
+	T_OROP  shift 106
+	T_MULOP  shift 107
+	T_ADDOP  shift 108
+	T_DIVOP  shift 109
+	.  error
+
+
+state 143
+	expression : expression . T_OROP expression  (69)
+	expression : expression . T_ANDOP expression  (70)
+	expression : expression . T_RELOP expression  (71)
+	expression : expression . T_ADDOP expression  (72)
+	expression : expression . T_MULOP expression  (73)
+	expression : expression . T_DIVOP expression  (74)
+	expression : expression . T_POWEROP expression  (75)
+	expression : T_NEW T_LPAREN expression . T_RPAREN  (81)
+
+	T_RPAREN  shift 182
+	T_POWEROP  shift 103
+	T_ANDOP  shift 104
+	T_RELOP  shift 105
+	T_OROP  shift 106
+	T_MULOP  shift 107
+	T_ADDOP  shift 108
+	T_DIVOP  shift 109
+	.  error
+
+
+state 144
+	listexpression : T_LBRACK expressions T_RBRACK .  (85)
+
+	.  reduce 85
+
+
+state 145
+	write_list : write_list T_COMMA write_item .  (103)
+
+	.  reduce 103
+
+
+state 146
+	expression : expression . T_OROP expression  (69)
+	expression : expression . T_ANDOP expression  (70)
+	expression : expression . T_RELOP expression  (71)
+	expression : expression . T_ADDOP expression  (72)
+	expression : expression . T_MULOP expression  (73)
+	expression : expression . T_DIVOP expression  (74)
+	expression : expression . T_POWEROP expression  (75)
+	expression : expression T_POWEROP expression .  (75)
+
+	T_POWEROP  shift 103
+	T_GOTO  reduce 75
+	T_RETURN  reduce 75
+	T_COMPLEX  reduce 75
+	T_DO  reduce 75
+	T_CALL  reduce 75
+	T_RPAREN  reduce 75
+	T_READ  reduce 75
+	T_COLON  reduce 75
+	T_REAL  reduce 75
+	T_LOGICAL  reduce 75
+	T_CHARACTER  reduce 75
+	T_RBRACK  reduce 75
+	T_ELSE  reduce 75
+	T_IF  reduce 75
+	T_COMMON  reduce 75
+	T_ANDOP  reduce 75
+	T_ENDDO  reduce 75
+	T_ICONST  reduce 75
+	T_CONTINUE  reduce 75
+	T_COMMA  reduce 75
+	T_ID  reduce 75
+	T_RELOP  reduce 75
+	T_STOP  reduce 75
+	T_INTEGER  reduce 75
+	T_DATA  reduce 75
+	T_WRITE  reduce 75
+	T_STRING  reduce 75
+	T_OROP  reduce 75
+	T_MULOP  reduce 75
+	T_ADDOP  reduce 75
+	T_END  reduce 75
+	T_ENDIF  reduce 75
+	T_DIVOP  reduce 75
+	T_LISTFUNC  reduce 75
+
+
+state 147
+	expression : expression . T_OROP expression  (69)
+	expression : expression . T_ANDOP expression  (70)
+	expression : expression T_ANDOP expression .  (70)
+	expression : expression . T_RELOP expression  (71)
+	expression : expression . T_ADDOP expression  (72)
+	expression : expression . T_MULOP expression  (73)
+	expression : expression . T_DIVOP expression  (74)
+	expression : expression . T_POWEROP expression  (75)
+
+	T_POWEROP  shift 103
+	T_RELOP  shift 105
+	T_MULOP  shift 107
+	T_ADDOP  shift 108
+	T_DIVOP  shift 109
+	T_GOTO  reduce 70
+	T_RETURN  reduce 70
+	T_COMPLEX  reduce 70
+	T_DO  reduce 70
+	T_CALL  reduce 70
+	T_RPAREN  reduce 70
+	T_READ  reduce 70
+	T_COLON  reduce 70
+	T_REAL  reduce 70
+	T_LOGICAL  reduce 70
+	T_CHARACTER  reduce 70
+	T_RBRACK  reduce 70
+	T_ELSE  reduce 70
+	T_IF  reduce 70
+	T_COMMON  reduce 70
+	T_ANDOP  reduce 70
+	T_ENDDO  reduce 70
+	T_ICONST  reduce 70
+	T_CONTINUE  reduce 70
+	T_COMMA  reduce 70
+	T_ID  reduce 70
+	T_STOP  reduce 70
+	T_INTEGER  reduce 70
+	T_DATA  reduce 70
+	T_WRITE  reduce 70
+	T_STRING  reduce 70
+	T_OROP  reduce 70
+	T_END  reduce 70
+	T_ENDIF  reduce 70
+	T_LISTFUNC  reduce 70
+
+
+state 148
+	expression : expression . T_OROP expression  (69)
+	expression : expression . T_ANDOP expression  (70)
+	expression : expression . T_RELOP expression  (71)
+	expression : expression T_RELOP expression .  (71)
+	expression : expression . T_ADDOP expression  (72)
+	expression : expression . T_MULOP expression  (73)
+	expression : expression . T_DIVOP expression  (74)
+	expression : expression . T_POWEROP expression  (75)
+
+	T_POWEROP  shift 103
+	T_MULOP  shift 107
+	T_ADDOP  shift 108
+	T_DIVOP  shift 109
+	T_GOTO  reduce 71
+	T_RETURN  reduce 71
+	T_COMPLEX  reduce 71
+	T_DO  reduce 71
+	T_CALL  reduce 71
+	T_RPAREN  reduce 71
+	T_READ  reduce 71
+	T_COLON  reduce 71
+	T_REAL  reduce 71
+	T_LOGICAL  reduce 71
+	T_CHARACTER  reduce 71
+	T_RBRACK  reduce 71
+	T_ELSE  reduce 71
+	T_IF  reduce 71
+	T_COMMON  reduce 71
+	T_ANDOP  reduce 71
+	T_ENDDO  reduce 71
+	T_ICONST  reduce 71
+	T_CONTINUE  reduce 71
+	T_COMMA  reduce 71
+	T_ID  reduce 71
+	T_STOP  reduce 71
+	T_INTEGER  reduce 71
+	T_DATA  reduce 71
+	T_WRITE  reduce 71
+	T_STRING  reduce 71
+	T_OROP  reduce 71
+	T_END  reduce 71
+	T_ENDIF  reduce 71
+	T_LISTFUNC  reduce 71
+
+
+state 149
+	expression : expression . T_OROP expression  (69)
+	expression : expression T_OROP expression .  (69)
+	expression : expression . T_ANDOP expression  (70)
+	expression : expression . T_RELOP expression  (71)
+	expression : expression . T_ADDOP expression  (72)
+	expression : expression . T_MULOP expression  (73)
+	expression : expression . T_DIVOP expression  (74)
+	expression : expression . T_POWEROP expression  (75)
+
+	T_POWEROP  shift 103
+	T_ANDOP  shift 104
+	T_RELOP  shift 105
+	T_MULOP  shift 107
+	T_ADDOP  shift 108
+	T_DIVOP  shift 109
+	T_GOTO  reduce 69
+	T_RETURN  reduce 69
+	T_COMPLEX  reduce 69
+	T_DO  reduce 69
+	T_CALL  reduce 69
+	T_RPAREN  reduce 69
+	T_READ  reduce 69
+	T_COLON  reduce 69
+	T_REAL  reduce 69
+	T_LOGICAL  reduce 69
+	T_CHARACTER  reduce 69
+	T_RBRACK  reduce 69
+	T_ELSE  reduce 69
+	T_IF  reduce 69
+	T_COMMON  reduce 69
+	T_ENDDO  reduce 69
+	T_ICONST  reduce 69
+	T_CONTINUE  reduce 69
+	T_COMMA  reduce 69
+	T_ID  reduce 69
+	T_STOP  reduce 69
+	T_INTEGER  reduce 69
+	T_DATA  reduce 69
+	T_WRITE  reduce 69
+	T_STRING  reduce 69
+	T_OROP  reduce 69
+	T_END  reduce 69
+	T_ENDIF  reduce 69
+	T_LISTFUNC  reduce 69
+
+
+state 150
+	expression : expression . T_OROP expression  (69)
+	expression : expression . T_ANDOP expression  (70)
+	expression : expression . T_RELOP expression  (71)
+	expression : expression . T_ADDOP expression  (72)
+	expression : expression . T_MULOP expression  (73)
+	expression : expression T_MULOP expression .  (73)
+	expression : expression . T_DIVOP expression  (74)
+	expression : expression . T_POWEROP expression  (75)
+
+	T_POWEROP  shift 103
+	T_GOTO  reduce 73
+	T_RETURN  reduce 73
+	T_COMPLEX  reduce 73
+	T_DO  reduce 73
+	T_CALL  reduce 73
+	T_RPAREN  reduce 73
+	T_READ  reduce 73
+	T_COLON  reduce 73
+	T_REAL  reduce 73
+	T_LOGICAL  reduce 73
+	T_CHARACTER  reduce 73
+	T_RBRACK  reduce 73
+	T_ELSE  reduce 73
+	T_IF  reduce 73
+	T_COMMON  reduce 73
+	T_ANDOP  reduce 73
+	T_ENDDO  reduce 73
+	T_ICONST  reduce 73
+	T_CONTINUE  reduce 73
+	T_COMMA  reduce 73
+	T_ID  reduce 73
+	T_RELOP  reduce 73
+	T_STOP  reduce 73
+	T_INTEGER  reduce 73
+	T_DATA  reduce 73
+	T_WRITE  reduce 73
+	T_STRING  reduce 73
+	T_OROP  reduce 73
+	T_MULOP  reduce 73
+	T_ADDOP  reduce 73
+	T_END  reduce 73
+	T_ENDIF  reduce 73
+	T_DIVOP  reduce 73
+	T_LISTFUNC  reduce 73
+
+
+state 151
+	expression : expression . T_OROP expression  (69)
+	expression : expression . T_ANDOP expression  (70)
+	expression : expression . T_RELOP expression  (71)
+	expression : expression . T_ADDOP expression  (72)
+	expression : expression T_ADDOP expression .  (72)
+	expression : expression . T_MULOP expression  (73)
+	expression : expression . T_DIVOP expression  (74)
+	expression : expression . T_POWEROP expression  (75)
+
+	T_POWEROP  shift 103
+	T_MULOP  shift 107
+	T_DIVOP  shift 109
+	T_GOTO  reduce 72
+	T_RETURN  reduce 72
+	T_COMPLEX  reduce 72
+	T_DO  reduce 72
+	T_CALL  reduce 72
+	T_RPAREN  reduce 72
+	T_READ  reduce 72
+	T_COLON  reduce 72
+	T_REAL  reduce 72
+	T_LOGICAL  reduce 72
+	T_CHARACTER  reduce 72
+	T_RBRACK  reduce 72
+	T_ELSE  reduce 72
+	T_IF  reduce 72
+	T_COMMON  reduce 72
+	T_ANDOP  reduce 72
+	T_ENDDO  reduce 72
+	T_ICONST  reduce 72
+	T_CONTINUE  reduce 72
+	T_COMMA  reduce 72
+	T_ID  reduce 72
+	T_RELOP  reduce 72
+	T_STOP  reduce 72
+	T_INTEGER  reduce 72
+	T_DATA  reduce 72
+	T_WRITE  reduce 72
+	T_STRING  reduce 72
+	T_OROP  reduce 72
+	T_ADDOP  reduce 72
+	T_END  reduce 72
+	T_ENDIF  reduce 72
+	T_LISTFUNC  reduce 72
+
+
+state 152
+	expression : expression . T_OROP expression  (69)
+	expression : expression . T_ANDOP expression  (70)
+	expression : expression . T_RELOP expression  (71)
+	expression : expression . T_ADDOP expression  (72)
+	expression : expression . T_MULOP expression  (73)
+	expression : expression . T_DIVOP expression  (74)
+	expression : expression T_DIVOP expression .  (74)
+	expression : expression . T_POWEROP expression  (75)
+
+	T_POWEROP  shift 103
+	T_GOTO  reduce 74
+	T_RETURN  reduce 74
+	T_COMPLEX  reduce 74
+	T_DO  reduce 74
+	T_CALL  reduce 74
+	T_RPAREN  reduce 74
+	T_READ  reduce 74
+	T_COLON  reduce 74
+	T_REAL  reduce 74
+	T_LOGICAL  reduce 74
+	T_CHARACTER  reduce 74
+	T_RBRACK  reduce 74
+	T_ELSE  reduce 74
+	T_IF  reduce 74
+	T_COMMON  reduce 74
+	T_ANDOP  reduce 74
+	T_ENDDO  reduce 74
+	T_ICONST  reduce 74
+	T_CONTINUE  reduce 74
+	T_COMMA  reduce 74
+	T_ID  reduce 74
+	T_RELOP  reduce 74
+	T_STOP  reduce 74
+	T_INTEGER  reduce 74
+	T_DATA  reduce 74
+	T_WRITE  reduce 74
+	T_STRING  reduce 74
+	T_OROP  reduce 74
+	T_MULOP  reduce 74
+	T_ADDOP  reduce 74
+	T_END  reduce 74
+	T_ENDIF  reduce 74
+	T_DIVOP  reduce 74
+	T_LISTFUNC  reduce 74
+
+
+state 153
+	variable : T_LISTFUNC T_LPAREN expression T_RPAREN .  (65)
+
+	.  reduce 65
+
+
+state 154
+	undef_variable : listspec T_ID T_LPAREN . dims T_RPAREN  (15)
+
+	T_ICONST  shift 183
+	T_ID  shift 184
+	.  error
+
+	dim  goto 185
+	dims  goto 186
+
+
+state 155
+	vars : vars T_COMMA undef_variable .  (13)
+
+	.  reduce 13
+
+
+state 156
+	header : T_SUBROUTINE T_ID . T_LPAREN formal_parameters T_RPAREN  (117)
+	header : T_SUBROUTINE T_ID .  (118)
+
+	T_LPAREN  shift 187
+	T_GOTO  reduce 118
+	T_RETURN  reduce 118
+	T_COMPLEX  reduce 118
+	T_DO  reduce 118
+	T_CALL  reduce 118
+	T_READ  reduce 118
+	T_REAL  reduce 118
+	T_LOGICAL  reduce 118
+	T_CHARACTER  reduce 118
+	T_IF  reduce 118
+	T_COMMON  reduce 118
+	T_ICONST  reduce 118
+	T_CONTINUE  reduce 118
+	T_ID  reduce 118
+	T_STOP  reduce 118
+	T_INTEGER  reduce 118
+	T_DATA  reduce 118
+	T_WRITE  reduce 118
+	T_STRING  reduce 118
+	T_LISTFUNC  reduce 118
+
+
+state 157
+	header : type listspec . T_FUNCTION T_ID T_LPAREN formal_parameters T_RPAREN  (116)
+
+	T_FUNCTION  shift 188
+	.  error
+
+
+state 158
+	subprogram : header body . T_END  (115)
+
+	T_END  shift 189
+	.  error
+
+
+state 159
+	labels : label .  (90)
+
+	.  reduce 90
+
+
+state 160
+	goto_statement : T_GOTO T_ID T_COMMA T_LPAREN labels . T_RPAREN  (88)
+	labels : labels . T_COMMA label  (89)
+
+	T_RPAREN  shift 190
+	T_COMMA  shift 191
+	.  error
+
+
+state 161
+	loop_statement : T_DO T_ID T_ASSIGN iter_space body . T_ENDDO  (112)
+
+	T_ENDDO  shift 192
+	.  error
+
+
+state 162
+	iter_space : expression T_COMMA . expression step  (100)
+
+	T_LPAREN  shift 85
+	T_CCONST  shift 56
+	T_LENGTH  shift 57
+	T_SCONST  shift 58
+	T_LCONST  shift 59
+	T_RCONST  shift 60
+	T_ICONST  shift 61
+	T_ID  shift 17
+	T_ADDOP  shift 62
+	T_NOTOP  shift 63
+	T_NEW  shift 64
+	T_LBRACK  shift 65
+	T_LISTFUNC  shift 23
+	.  error
+
+	listexpression  goto 67
+	expression  goto 193
+	simple_constant  goto 70
+	variable  goto 71
+
+
+state 163
+	variable : T_ID . T_LPAREN expressions T_RPAREN  (64)
+	variable : T_ID .  (66)
+	read_item : T_LPAREN read_list T_COMMA T_ID . T_ASSIGN iter_space T_RPAREN  (99)
+
+	T_LPAREN  shift 52
+	T_ASSIGN  shift 194
+	T_COMMA  reduce 66
+
+
+state 164
+	branch_statement : T_IF T_LPAREN expression T_RPAREN T_THEN . body tail  (109)
+	declarations : .  (6)
+
+	.  reduce 6
+
+	declarations  goto 2
+	body  goto 195
+
+
+state 165
+	if_statement : T_IF . T_LPAREN expression T_RPAREN label T_COMMA label T_COMMA label  (91)
+	if_statement : T_IF . T_LPAREN expression T_RPAREN simple_statement  (92)
+
+	T_LPAREN  shift 196
+	.  error
+
+
+state 166
+	if_statement : T_IF T_LPAREN expression T_RPAREN simple_statement .  (92)
+
+	.  reduce 92
+
+
+state 167
+	if_statement : T_IF T_LPAREN expression T_RPAREN label . T_COMMA label T_COMMA label  (91)
+
+	T_COMMA  shift 197
+	.  error
+
+
+state 168
+	id_list : T_ID .  (27)
+
+	.  reduce 27
+
+
+state 169
+	cblock : T_DIVOP T_ID T_DIVOP id_list .  (25)
+	id_list : id_list . T_COMMA T_ID  (26)
+
+	T_COMMA  shift 198
+	T_GOTO  reduce 25
+	T_RETURN  reduce 25
+	T_COMPLEX  reduce 25
+	T_DO  reduce 25
+	T_CALL  reduce 25
+	T_READ  reduce 25
+	T_REAL  reduce 25
+	T_LOGICAL  reduce 25
+	T_CHARACTER  reduce 25
+	T_IF  reduce 25
+	T_COMMON  reduce 25
+	T_ICONST  reduce 25
+	T_CONTINUE  reduce 25
+	T_ID  reduce 25
+	T_STOP  reduce 25
+	T_INTEGER  reduce 25
+	T_DATA  reduce 25
+	T_WRITE  reduce 25
+	T_STRING  reduce 25
+	T_DIVOP  reduce 25
+	T_LISTFUNC  reduce 25
+
+
+state 170
+	expressions : expressions T_COMMA expression .  (67)
+	expression : expression . T_OROP expression  (69)
+	expression : expression . T_ANDOP expression  (70)
+	expression : expression . T_RELOP expression  (71)
+	expression : expression . T_ADDOP expression  (72)
+	expression : expression . T_MULOP expression  (73)
+	expression : expression . T_DIVOP expression  (74)
+	expression : expression . T_POWEROP expression  (75)
+
+	T_POWEROP  shift 103
+	T_ANDOP  shift 104
+	T_RELOP  shift 105
+	T_OROP  shift 106
+	T_MULOP  shift 107
+	T_ADDOP  shift 108
+	T_DIVOP  shift 109
+	T_RPAREN  reduce 67
+	T_RBRACK  reduce 67
+	T_COMMA  reduce 67
+
+
+state 171
+	complex_constant : T_LPAREN T_RCONST . T_COLON sign T_RCONST T_RPAREN  (47)
+
+	T_COLON  shift 199
+	.  error
+
+
+state 172
+	repeat : T_ICONST T_MULOP .  (36)
+
+	.  reduce 36
+
+
+state 173
+	value : T_ADDOP constant .  (34)
+
+	.  reduce 34
+
+
+state 174
+	values : values T_COMMA . value  (31)
+
+	T_LPAREN  shift 128
+	T_CCONST  shift 56
+	T_SCONST  shift 58
+	T_LCONST  shift 59
+	T_RCONST  shift 60
+	T_ICONST  shift 129
+	T_MULOP  shift 130
+	T_ADDOP  shift 131
+	.  error
+
+	complex_constant  goto 132
+	simple_constant  goto 134
+	value  goto 200
+	constant  goto 136
+	repeat  goto 137
+
+
+state 175
+	value_list : T_DIVOP values T_DIVOP .  (30)
+
+	.  reduce 30
+
+
+state 176
+	sign : T_ADDOP .  (38)
+
+	.  reduce 38
+
+
+state 177
+	value : repeat sign . constant  (33)
+
+	T_LPAREN  shift 128
+	T_CCONST  shift 56
+	T_SCONST  shift 58
+	T_LCONST  shift 59
+	T_RCONST  shift 60
+	T_ICONST  shift 61
+	.  error
+
+	complex_constant  goto 132
+	simple_constant  goto 134
+	constant  goto 201
+
+
+state 178
+	vals : vals T_COMMA T_ID value_list .  (28)
+
+	.  reduce 28
+
+
+state 179
+	variable : T_ID . T_LPAREN expressions T_RPAREN  (64)
+	variable : T_ID .  (66)
+	write_item : T_LPAREN write_list T_COMMA T_ID . T_ASSIGN iter_space T_RPAREN  (106)
+
+	T_LPAREN  shift 52
+	T_ASSIGN  shift 202
+	T_POWEROP  reduce 66
+	T_ANDOP  reduce 66
+	T_COMMA  reduce 66
+	T_RELOP  reduce 66
+	T_OROP  reduce 66
+	T_MULOP  reduce 66
+	T_ADDOP  reduce 66
+	T_DIVOP  reduce 66
+
+
+state 180
+	expression : expression . T_OROP expression  (69)
+	expression : expression . T_ANDOP expression  (70)
+	expression : expression . T_RELOP expression  (71)
+	expression : expression . T_ADDOP expression  (72)
+	expression : expression . T_MULOP expression  (73)
+	expression : expression . T_DIVOP expression  (74)
+	expression : expression . T_POWEROP expression  (75)
+	expression : T_LPAREN expression T_COLON expression . T_RPAREN  (83)
+
+	T_RPAREN  shift 203
+	T_POWEROP  shift 103
+	T_ANDOP  shift 104
+	T_RELOP  shift 105
+	T_OROP  shift 106
+	T_MULOP  shift 107
+	T_ADDOP  shift 108
+	T_DIVOP  shift 109
+	.  error
+
+
+state 181
+	expression : T_LENGTH T_LPAREN expression T_RPAREN .  (80)
+
+	.  reduce 80
+
+
+state 182
+	expression : T_NEW T_LPAREN expression T_RPAREN .  (81)
+
+	.  reduce 81
+
+
+state 183
+	dim : T_ICONST .  (21)
+
+	.  reduce 21
+
+
+state 184
+	dim : T_ID .  (22)
+
+	.  reduce 22
+
+
+state 185
+	dims : dim .  (20)
+
+	.  reduce 20
+
+
+state 186
+	undef_variable : listspec T_ID T_LPAREN dims . T_RPAREN  (15)
+	dims : dims . T_COMMA dim  (19)
+
+	T_RPAREN  shift 204
+	T_COMMA  shift 205
+	.  error
+
+
+state 187
+	header : T_SUBROUTINE T_ID T_LPAREN . formal_parameters T_RPAREN  (117)
+
+	T_COMPLEX  shift 6
+	T_REAL  shift 10
+	T_LOGICAL  shift 11
+	T_CHARACTER  shift 12
+	T_INTEGER  shift 19
+	T_STRING  shift 22
+	.  error
+
+	type  goto 206
+	formal_parameters  goto 207
+
+
+state 188
+	header : type listspec T_FUNCTION . T_ID T_LPAREN formal_parameters T_RPAREN  (116)
+
+	T_ID  shift 208
+	.  error
+
+
+state 189
+	subprogram : header body T_END .  (115)
+
+	.  reduce 115
+
+
+state 190
+	goto_statement : T_GOTO T_ID T_COMMA T_LPAREN labels T_RPAREN .  (88)
+
+	.  reduce 88
+
+
+state 191
+	labels : labels T_COMMA . label  (89)
+
+	T_ICONST  shift 15
+	.  error
+
+	label  goto 209
+
+
+state 192
+	loop_statement : T_DO T_ID T_ASSIGN iter_space body T_ENDDO .  (112)
+
+	.  reduce 112
+
+
+state 193
+	expression : expression . T_OROP expression  (69)
+	expression : expression . T_ANDOP expression  (70)
+	expression : expression . T_RELOP expression  (71)
+	expression : expression . T_ADDOP expression  (72)
+	expression : expression . T_MULOP expression  (73)
+	expression : expression . T_DIVOP expression  (74)
+	expression : expression . T_POWEROP expression  (75)
+	iter_space : expression T_COMMA expression . step  (100)
+	step : .  (102)
+
+	T_POWEROP  shift 103
+	T_ANDOP  shift 104
+	T_COMMA  shift 210
+	T_RELOP  shift 105
+	T_OROP  shift 106
+	T_MULOP  shift 107
+	T_ADDOP  shift 108
+	T_DIVOP  shift 109
+	T_GOTO  reduce 102
+	T_RETURN  reduce 102
+	T_COMPLEX  reduce 102
+	T_DO  reduce 102
+	T_CALL  reduce 102
+	T_RPAREN  reduce 102
+	T_READ  reduce 102
+	T_REAL  reduce 102
+	T_LOGICAL  reduce 102
+	T_CHARACTER  reduce 102
+	T_IF  reduce 102
+	T_COMMON  reduce 102
+	T_ICONST  reduce 102
+	T_CONTINUE  reduce 102
+	T_ID  reduce 102
+	T_STOP  reduce 102
+	T_INTEGER  reduce 102
+	T_DATA  reduce 102
+	T_WRITE  reduce 102
+	T_STRING  reduce 102
+	T_LISTFUNC  reduce 102
+
+	step  goto 211
+
+
+state 194
+	read_item : T_LPAREN read_list T_COMMA T_ID T_ASSIGN . iter_space T_RPAREN  (99)
+
+	T_LPAREN  shift 85
+	T_CCONST  shift 56
+	T_LENGTH  shift 57
+	T_SCONST  shift 58
+	T_LCONST  shift 59
+	T_RCONST  shift 60
+	T_ICONST  shift 61
+	T_ID  shift 17
+	T_ADDOP  shift 62
+	T_NOTOP  shift 63
+	T_NEW  shift 64
+	T_LBRACK  shift 65
+	T_LISTFUNC  shift 23
+	.  error
+
+	iter_space  goto 212
+	listexpression  goto 67
+	expression  goto 120
+	simple_constant  goto 70
+	variable  goto 71
+
+
+state 195
+	branch_statement : T_IF T_LPAREN expression T_RPAREN T_THEN body . tail  (109)
+
+	T_ELSE  shift 213
+	T_ENDIF  shift 214
+	.  error
+
+	tail  goto 215
+
+
+state 196
+	if_statement : T_IF T_LPAREN . expression T_RPAREN label T_COMMA label T_COMMA label  (91)
+	if_statement : T_IF T_LPAREN . expression T_RPAREN simple_statement  (92)
+
+	T_LPAREN  shift 85
+	T_CCONST  shift 56
+	T_LENGTH  shift 57
+	T_SCONST  shift 58
+	T_LCONST  shift 59
+	T_RCONST  shift 60
+	T_ICONST  shift 61
+	T_ID  shift 17
+	T_ADDOP  shift 62
+	T_NOTOP  shift 63
+	T_NEW  shift 64
+	T_LBRACK  shift 65
+	T_LISTFUNC  shift 23
+	.  error
+
+	listexpression  goto 67
+	expression  goto 216
+	simple_constant  goto 70
+	variable  goto 71
+
+
+state 197
+	if_statement : T_IF T_LPAREN expression T_RPAREN label T_COMMA . label T_COMMA label  (91)
+
+	T_ICONST  shift 15
+	.  error
+
+	label  goto 217
+
+
+state 198
+	id_list : id_list T_COMMA . T_ID  (26)
+
+	T_ID  shift 218
+	.  error
+
+
+state 199
+	complex_constant : T_LPAREN T_RCONST T_COLON . sign T_RCONST T_RPAREN  (47)
+	sign : .  (39)
+
+	T_ADDOP  shift 176
+	T_RCONST  reduce 39
+
+	sign  goto 219
+
+
+state 200
+	values : values T_COMMA value .  (31)
+
+	.  reduce 31
+
+
+state 201
+	value : repeat sign constant .  (33)
+
+	.  reduce 33
+
+
+state 202
+	write_item : T_LPAREN write_list T_COMMA T_ID T_ASSIGN . iter_space T_RPAREN  (106)
+
+	T_LPAREN  shift 85
+	T_CCONST  shift 56
+	T_LENGTH  shift 57
+	T_SCONST  shift 58
+	T_LCONST  shift 59
+	T_RCONST  shift 60
+	T_ICONST  shift 61
+	T_ID  shift 17
+	T_ADDOP  shift 62
+	T_NOTOP  shift 63
+	T_NEW  shift 64
+	T_LBRACK  shift 65
+	T_LISTFUNC  shift 23
+	.  error
+
+	iter_space  goto 220
+	listexpression  goto 67
+	expression  goto 120
+	simple_constant  goto 70
+	variable  goto 71
+
+
+state 203
+	expression : T_LPAREN expression T_COLON expression T_RPAREN .  (83)
+
+	.  reduce 83
+
+
+state 204
+	undef_variable : listspec T_ID T_LPAREN dims T_RPAREN .  (15)
+
+	.  reduce 15
+
+
+state 205
+	dims : dims T_COMMA . dim  (19)
+
+	T_ICONST  shift 183
+	T_ID  shift 184
+	.  error
+
+	dim  goto 221
+
+
+state 206
+	formal_parameters : type . vars T_COMMA formal_parameters  (119)
+	formal_parameters : type . vars  (120)
+	listspec : .  (18)
+
+	T_LIST  shift 73
+	T_ID  reduce 18
+
+	listspec  goto 74
+	vars  goto 222
+	undef_variable  goto 76
+
+
+state 207
+	header : T_SUBROUTINE T_ID T_LPAREN formal_parameters . T_RPAREN  (117)
+
+	T_RPAREN  shift 223
+	.  error
+
+
+state 208
+	header : type listspec T_FUNCTION T_ID . T_LPAREN formal_parameters T_RPAREN  (116)
+
+	T_LPAREN  shift 224
+	.  error
+
+
+state 209
+	labels : labels T_COMMA label .  (89)
+
+	.  reduce 89
+
+
+state 210
+	step : T_COMMA . expression  (101)
+
+	T_LPAREN  shift 85
+	T_CCONST  shift 56
+	T_LENGTH  shift 57
+	T_SCONST  shift 58
+	T_LCONST  shift 59
+	T_RCONST  shift 60
+	T_ICONST  shift 61
+	T_ID  shift 17
+	T_ADDOP  shift 62
+	T_NOTOP  shift 63
+	T_NEW  shift 64
+	T_LBRACK  shift 65
+	T_LISTFUNC  shift 23
+	.  error
+
+	listexpression  goto 67
+	expression  goto 225
+	simple_constant  goto 70
+	variable  goto 71
+
+
+state 211
+	iter_space : expression T_COMMA expression step .  (100)
+
+	.  reduce 100
+
+
+state 212
+	read_item : T_LPAREN read_list T_COMMA T_ID T_ASSIGN iter_space . T_RPAREN  (99)
+
+	T_RPAREN  shift 226
+	.  error
+
+
+state 213
+	tail : T_ELSE . body T_ENDIF  (110)
+	declarations : .  (6)
+
+	.  reduce 6
+
+	declarations  goto 2
+	body  goto 227
+
+
+state 214
+	tail : T_ENDIF .  (111)
+
+	.  reduce 111
+
+
+state 215
+	branch_statement : T_IF T_LPAREN expression T_RPAREN T_THEN body tail .  (109)
+
+	.  reduce 109
+
+
+state 216
+	expression : expression . T_OROP expression  (69)
+	expression : expression . T_ANDOP expression  (70)
+	expression : expression . T_RELOP expression  (71)
+	expression : expression . T_ADDOP expression  (72)
+	expression : expression . T_MULOP expression  (73)
+	expression : expression . T_DIVOP expression  (74)
+	expression : expression . T_POWEROP expression  (75)
+	if_statement : T_IF T_LPAREN expression . T_RPAREN label T_COMMA label T_COMMA label  (91)
+	if_statement : T_IF T_LPAREN expression . T_RPAREN simple_statement  (92)
+
+	T_RPAREN  shift 228
+	T_POWEROP  shift 103
+	T_ANDOP  shift 104
+	T_RELOP  shift 105
+	T_OROP  shift 106
+	T_MULOP  shift 107
+	T_ADDOP  shift 108
+	T_DIVOP  shift 109
+	.  error
+
+
+state 217
+	if_statement : T_IF T_LPAREN expression T_RPAREN label T_COMMA label . T_COMMA label  (91)
+
+	T_COMMA  shift 229
+	.  error
+
+
+state 218
+	id_list : id_list T_COMMA T_ID .  (26)
+
+	.  reduce 26
+
+
+state 219
+	complex_constant : T_LPAREN T_RCONST T_COLON sign . T_RCONST T_RPAREN  (47)
+
+	T_RCONST  shift 230
+	.  error
+
+
+state 220
+	write_item : T_LPAREN write_list T_COMMA T_ID T_ASSIGN iter_space . T_RPAREN  (106)
+
+	T_RPAREN  shift 231
+	.  error
+
+
+state 221
+	dims : dims T_COMMA dim .  (19)
+
+	.  reduce 19
+
+
+state 222
+	vars : vars . T_COMMA undef_variable  (13)
+	formal_parameters : type vars . T_COMMA formal_parameters  (119)
+	formal_parameters : type vars .  (120)
+
+	T_COMMA  shift 232
+	T_RPAREN  reduce 120
+
+
+state 223
+	header : T_SUBROUTINE T_ID T_LPAREN formal_parameters T_RPAREN .  (117)
+
+	.  reduce 117
+
+
+state 224
+	header : type listspec T_FUNCTION T_ID T_LPAREN . formal_parameters T_RPAREN  (116)
+
+	T_COMPLEX  shift 6
+	T_REAL  shift 10
+	T_LOGICAL  shift 11
+	T_CHARACTER  shift 12
+	T_INTEGER  shift 19
+	T_STRING  shift 22
+	.  error
+
+	type  goto 206
+	formal_parameters  goto 233
+
+
+state 225
+	expression : expression . T_OROP expression  (69)
+	expression : expression . T_ANDOP expression  (70)
+	expression : expression . T_RELOP expression  (71)
+	expression : expression . T_ADDOP expression  (72)
+	expression : expression . T_MULOP expression  (73)
+	expression : expression . T_DIVOP expression  (74)
+	expression : expression . T_POWEROP expression  (75)
+	step : T_COMMA expression .  (101)
+
+	T_POWEROP  shift 103
+	T_ANDOP  shift 104
+	T_RELOP  shift 105
+	T_OROP  shift 106
+	T_MULOP  shift 107
+	T_ADDOP  shift 108
+	T_DIVOP  shift 109
+	T_GOTO  reduce 101
+	T_RETURN  reduce 101
+	T_COMPLEX  reduce 101
+	T_DO  reduce 101
+	T_CALL  reduce 101
+	T_RPAREN  reduce 101
+	T_READ  reduce 101
+	T_REAL  reduce 101
+	T_LOGICAL  reduce 101
+	T_CHARACTER  reduce 101
+	T_IF  reduce 101
+	T_COMMON  reduce 101
+	T_ICONST  reduce 101
+	T_CONTINUE  reduce 101
+	T_ID  reduce 101
+	T_STOP  reduce 101
+	T_INTEGER  reduce 101
+	T_DATA  reduce 101
+	T_WRITE  reduce 101
+	T_STRING  reduce 101
+	T_LISTFUNC  reduce 101
+
+
+state 226
+	read_item : T_LPAREN read_list T_COMMA T_ID T_ASSIGN iter_space T_RPAREN .  (99)
+
+	.  reduce 99
+
+
+state 227
+	tail : T_ELSE body . T_ENDIF  (110)
+
+	T_ENDIF  shift 234
+	.  error
+
+
+state 228
+	if_statement : T_IF T_LPAREN expression T_RPAREN . label T_COMMA label T_COMMA label  (91)
+	if_statement : T_IF T_LPAREN expression T_RPAREN . simple_statement  (92)
+
+	T_GOTO  shift 4
+	T_RETURN  shift 5
+	T_CALL  shift 8
+	T_READ  shift 9
+	T_IF  shift 165
+	T_ICONST  shift 15
+	T_CONTINUE  shift 16
+	T_ID  shift 17
+	T_STOP  shift 18
+	T_WRITE  shift 21
+	T_LISTFUNC  shift 23
+	.  error
+
+	simple_statement  goto 166
+	label  goto 167
+	io_statement  goto 31
+	goto_statement  goto 32
+	variable  goto 33
+	subroutine_call  goto 35
+	if_statement  goto 36
+	assignment  goto 37
+
+
+state 229
+	if_statement : T_IF T_LPAREN expression T_RPAREN label T_COMMA label T_COMMA . label  (91)
+
+	T_ICONST  shift 15
+	.  error
+
+	label  goto 235
+
+
+state 230
+	complex_constant : T_LPAREN T_RCONST T_COLON sign T_RCONST . T_RPAREN  (47)
+
+	T_RPAREN  shift 236
+	.  error
+
+
+state 231
+	write_item : T_LPAREN write_list T_COMMA T_ID T_ASSIGN iter_space T_RPAREN .  (106)
+
+	.  reduce 106
+
+
+state 232
+	vars : vars T_COMMA . undef_variable  (13)
+	formal_parameters : type vars T_COMMA . formal_parameters  (119)
+	listspec : .  (18)
+
+	T_COMPLEX  shift 6
+	T_REAL  shift 10
+	T_LOGICAL  shift 11
+	T_CHARACTER  shift 12
+	T_INTEGER  shift 19
+	T_STRING  shift 22
+	T_LIST  shift 73
+	T_ID  reduce 18
+
+	type  goto 206
+	formal_parameters  goto 237
+	listspec  goto 74
+	undef_variable  goto 155
+
+
+state 233
+	header : type listspec T_FUNCTION T_ID T_LPAREN formal_parameters . T_RPAREN  (116)
+
+	T_RPAREN  shift 238
+	.  error
+
+
+state 234
+	tail : T_ELSE body T_ENDIF .  (110)
+
+	.  reduce 110
+
+
+state 235
+	if_statement : T_IF T_LPAREN expression T_RPAREN label T_COMMA label T_COMMA label .  (91)
+
+	.  reduce 91
+
+
+state 236
+	complex_constant : T_LPAREN T_RCONST T_COLON sign T_RCONST T_RPAREN .  (47)
+
+	.  reduce 47
+
+
+state 237
+	formal_parameters : type vars T_COMMA formal_parameters .  (119)
+
+	.  reduce 119
+
+
+state 238
+	header : type listspec T_FUNCTION T_ID T_LPAREN formal_parameters T_RPAREN .  (116)
+
+	.  reduce 116
+
+
+51 terminals, 51 nonterminals
+121 grammar rules, 239 states
